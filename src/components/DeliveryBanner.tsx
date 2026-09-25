@@ -1,5 +1,7 @@
 import { CONTACT } from "@/data/menu";
 
+const ORDER_PHONE = CONTACT.phones[1] ?? CONTACT.phones[0] ?? "";
+
 export function DeliveryBanner() {
   return (
     <section
