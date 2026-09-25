@@ -16,7 +16,7 @@ type Tab = MenuCategory | "all" | "deals";
 function MenuItemCard({ item }: { item: MenuItem }) {
   const [selected, setSelected] = useState(0);
   const { addItem } = useCart();
-  const price = item.prices[selected];
+  const price = item.prices[selected] ?? item.prices[0]!;
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-charcoal-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.8)]">

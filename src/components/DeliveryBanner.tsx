@@ -27,7 +27,7 @@ export function DeliveryBanner() {
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
           <a
-            href={`tel:${CONTACT.phones[1].replace(/-/g, "")}`}
+            href={`tel:${ORDER_PHONE.replace(/-/g, "")}`}
             className="inline-flex h-14 items-center rounded-xl bg-accent px-8 font-display text-base font-black text-accent-foreground shadow-[0_10px_30px_-8px_var(--brand-gold)] transition-transform hover:scale-105"
           >
             📞 Call to Order
