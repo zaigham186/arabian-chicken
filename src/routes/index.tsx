@@ -1,24 +1,57 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { CartProvider } from "@/components/cart";
+import { CartWidget } from "@/components/CartWidget";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { BestOffer } from "@/components/BestOffer";
+import { MenuSection } from "@/components/MenuSection";
+import { Deals } from "@/components/Deals";
+import { DeliveryBanner } from "@/components/DeliveryBanner";
+import { About } from "@/components/About";
+import { Gallery } from "@/components/Gallery";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar" },
+      {
+        name: "description",
+        content:
+          "Arabian Chick, N is Peshawar's go-to spot for crispy wings, sizzling BBQ and handcrafted pizzas. Student deals, home delivery — order on WhatsApp.",
+      },
+      { property: "og:title", content: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar" },
+      {
+        property: "og:description",
+        content:
+          "Crispy wings, sizzling BBQ and handcrafted pizzas in Peshawar. Explore the menu, student deals and home delivery.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <CartProvider>
+      <Navbar />
+      <main>
+        <Hero />
+        <BestOffer />
+        <MenuSection />
+        <Deals />
+        <DeliveryBanner />
+        <About />
+        <Gallery />
+        <Contact />
+      </main>
+      <Footer />
+      <CartWidget />
+    </CartProvider>
   );
 }
