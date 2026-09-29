@@ -312,7 +312,7 @@ export const DEALS: Deal[] = [
 
 export const CONTACT = {
   phones: ["051-2312777", "0346-8627796"],
-  whatsapp: "0334-8457676",
+  whatsapp: "0346-9827796",
   whatsappLink: "https://wa.me/923348457676",
   facebook: "https://facebook.com/arabianchickgulbahar",
   facebookHandle: "@arabianchickgulbahar",
