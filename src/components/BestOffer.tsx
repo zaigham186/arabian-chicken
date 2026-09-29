@@ -1,16 +1,86 @@
+import { useState } from "react";
 import { FOOD_IMAGES } from "@/data/images";
-import { formatRs, CONTACT } from "@/data/menu";
+import { formatRs, CONTACT, MENU_ITEMS, type MenuItem } from "@/data/menu";
 import { useCart } from "./cart";
 
-const SHOWCASE = [
-  { name: "Baked Wings", image: "wings", priceLabel: "5 Pc Rs.350 / 10 Pc Rs.650", option: "5 Piece", price: 350 },
-  { name: "Buffalo Wings", image: "wings", priceLabel: "5 Pc Rs.370 / 10 Pc Rs.700", option: "5 Piece", price: 370 },
-  { name: "Bar B Q", image: "bbq", priceLabel: "Full Rs.1600 / Half Rs.800", option: "Half Chicken", price: 800 },
-];
+function OfferCard({ item }: { item: MenuItem }) {
+  const { addItem } = useCart();
+  const [selected, setSelected] = useState(0);
+  const current = item.prices[selected];
+
+  return (
+    <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
+      <div className="relative h-52 overflow-hidden">
+        <img
+          src={FOOD_IMAGES[item.image]}
+          alt={item.name}
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <span className="absolute right-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-black text-accent-foreground shadow">
+          NEW
+        </span>
+      </div>
+
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="font-display text-xl font-bold">{item.name}</h3>
+
+        {/* Option selector (5 Piece / 10 Piece, Full / Half, etc.) */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {item.prices.map((p, i) => (
+            <button
+              key={p.label}
+              type="button"
+              onClick={() => setSelected(i)}
+              className={`rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
+                i === selected
+                  ? "border-brand-red bg-brand-red text-primary-foreground"
+                  : "border-black/15 text-cream-foreground/80 hover:border-brand-red"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
+        <p className="mt-3 font-display text-2xl font-black text-brand-red">
+          {formatRs(current.value)}
+        </p>
+
+        <div className="mt-auto flex gap-3 pt-5">
+          <button
+            type="button"
+            onClick={() =>
+              addItem({
+                key: `${item.name}-${current.label}`,
+                name: item.name,
+                option: current.label,
+                price: current.value,
+              })
+            }
+            className="flex h-11 flex-1 items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
+          >
+            Add to Order
+          </button>
+          <a
+            href={CONTACT.whatsappLink}
+            target="_blank"
+            rel="noreferrer"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border-2 border-accent font-bold text-accent-foreground transition-colors hover:bg-accent"
+            aria-label={`Order ${item.name} on WhatsApp`}
+            title="Order on WhatsApp"
+          >
+            🛒
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export function BestOffer() {
-  const { addItem } = useCart();
-
   return (
     <section className="bg-cream py-20 text-cream-foreground sm:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -23,51 +93,9 @@ export function BestOffer() {
           </h2>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {SHOWCASE.map((item) => (
-            <article
-              key={item.name}
-              className="group overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={FOOD_IMAGES[item.image]}
-                  alt={item.name}
-                  loading="lazy"
-                  width={1024}
-                  height={1024}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <span className="absolute right-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-black text-accent-foreground shadow">
-                  NEW
-                </span>
-              </div>
-              <div className="p-6">
-                <h3 className="font-display text-xl font-bold">{item.name}</h3>
-                <p className="mt-2 text-sm font-semibold text-brand-red">{item.priceLabel}</p>
-                <div className="mt-5 flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      addItem({ key: `${item.name}-${item.option}`, name: item.name, option: item.option, price: item.price })
-                    }
-                    className="flex h-11 flex-1 items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
-                  >
-                    Add to Order
-                  </button>
-                  <a
-                    href={CONTACT.whatsappLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border-2 border-accent font-bold text-accent-foreground transition-colors hover:bg-accent"
-                    aria-label={`Order ${item.name} on WhatsApp`}
-                    title="Order on WhatsApp"
-                  >
-                    🛒
-                  </a>
-                </div>
-              </div>
-            </article>
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {MENU_ITEMS.map((item) => (
+            <OfferCard key={item.id} item={item} />
           ))}
         </div>
       </div>

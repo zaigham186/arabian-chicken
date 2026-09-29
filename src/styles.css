@@ -204,3 +204,63 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-kenburns, .animate-float3d, .animate-glow { animation: none; }
 }
+/* Scroll reveal: text aur cards */
+.about-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s, ring-color 0.3s;
+}
+.about-section[data-inview="true"] .about-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+.about-d1 { transition-delay: 0.05s; }
+.about-d2 { transition-delay: 0.2s; }
+.about-d3 { transition-delay: 0.35s; }
+
+/* Image right se slide + 3D rotate ho kar aati hai */
+.about-image-reveal {
+  opacity: 0;
+  transform: translateX(80px) rotateY(-12deg) scale(0.95);
+  transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+              transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+.about-section[data-inview="true"] .about-image-reveal {
+  opacity: 1;
+  transform: translateX(0) rotateY(0) scale(1);
+}
+
+/* Heading ke neeche wali line grow ho */
+.about-section .heading-underline::after {
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.9s ease 0.7s;
+}
+.about-section[data-inview="true"] .heading-underline::after {
+  transform: scaleX(1);
+}
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(30px, -40px) scale(1.15); }
+}
+.animate-blob { animation: blob 14s ease-in-out infinite; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.animate-bob { animation: bob 3s ease-in-out infinite; }
+
+@keyframes frame {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-6px, -6px); }
+}
+.animate-frame { animation: frame 5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal, .about-image-reveal { opacity: 1; transform: none; transition: none; }
+  .animate-blob, .animate-bob, .animate-frame { animation: none; }
+}
