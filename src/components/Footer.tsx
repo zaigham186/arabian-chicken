@@ -15,8 +15,8 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-4 max-w-xs text-sm font-medium leading-relaxed text-muted-foreground">
-            Crispy wings, sizzling BBQ and handcrafted pizzas — fast, hot &amp;
-            fresh across Peshawar.
+            Crispy wings, sizzling BBQ and handcrafted pizzas — fast, hot &amp; fresh across
+            Peshawar.
           </p>
         </div>
 
@@ -46,7 +46,11 @@ export function Footer() {
               aria-label="Facebook"
               className="grid h-11 w-11 place-items-center rounded-xl border border-border text-lg transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground"
             >
-              📘
+              <img
+                src="https://images.unsplash.com/photo-1662070479020-73f77887c87c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZmFjZWJvb2slMjBpbWFnZXxlbnwwfHwwfHx8MA%3D%3D"
+                alt="Facebook"
+                className="h-full w-full rounded-xl object-cover"
+              />
             </a>
             <a
               href={CONTACT.whatsappLink}
@@ -55,7 +59,11 @@ export function Footer() {
               aria-label="WhatsApp"
               className="grid h-11 w-11 place-items-center rounded-xl border border-border text-lg transition-colors hover:border-accent hover:bg-accent hover:text-accent-foreground"
             >
-              📱
+              <img
+                src="https://images.unsplash.com/photo-1661862649743-2799867c32b0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8d2hhdHNhcHAlMjBpbWFnZXxlbnwwfHwwfHx8MA%3D%3D"
+                alt="WhatsApp"
+                className="h-full w-full rounded-xl object-cover"
+              />
             </a>
           </div>
           <p className="mt-4 text-sm font-semibold text-foreground/80">{CONTACT.whatsapp}</p>

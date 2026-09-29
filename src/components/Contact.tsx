@@ -90,13 +90,13 @@ export function Contact() {
           </ul>
         </div>
 
-        <div className="min-h-[380px] overflow-hidden rounded-3xl shadow-lg ring-1 ring-black/10">
+        <div className="min-h-95 overflow-hidden rounded-3xl shadow-lg ring-1 ring-black/10">
           <iframe
             title="Arabian Chick, N location — Gulbahar No.2, Peshawar"
             src={CONTACT.mapEmbed}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="h-full min-h-[380px] w-full border-0"
+            className="h-full min-h-95 w-full border-0"
             allowFullScreen
           />
         </div>

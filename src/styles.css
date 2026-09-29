@@ -177,3 +177,30 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+@keyframes kenburns {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.18) translate3d(-1.5%, -1%, 0); }
+}
+.animate-kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+
+@keyframes float3d {
+  0%, 100% { transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(-15deg) rotateZ(-4deg); }
+  50%      { transform: translate3d(0, -28px, 0) rotateX(18deg) rotateY(20deg) rotateZ(8deg); }
+}
+.animate-float3d {
+  animation: float3d 7s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+  50%      { opacity: 0.9; transform: translateY(-50%) scale(1.15); }
+}
+.animate-glow {
+  animation: glow 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-kenburns, .animate-float3d, .animate-glow { animation: none; }
+}

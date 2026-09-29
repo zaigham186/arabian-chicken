@@ -73,8 +73,8 @@ function DealCard({ deal, compact = false }: { deal: (typeof DEALS)[number]; com
   const { addItem } = useCart();
   return (
     <article
-      className={`group relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-br from-brand-red to-brand-red-deep p-6 shadow-lg ring-1 ring-brand-gold/40 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] ${
-        compact ? "" : "min-w-[270px]"
+      className={`group relative flex flex-col overflow-hidden rounded-2xl bg-linear-to-br from-brand-red to-brand-red-deep p-6 shadow-lg ring-1 ring-brand-gold/40 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] ${
+        compact ? "" : "min-w-67.5"
       }`}
     >
       <span className="inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-xs font-black uppercase tracking-wide text-accent-foreground">

@@ -14,7 +14,7 @@ export function BestOffer() {
   return (
     <section className="bg-cream py-20 text-cream-foreground sm:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="sheen relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand-red-deep via-brand-red to-brand-gold-deep p-8 shadow-2xl sm:p-12">
+        <div className="sheen relative overflow-hidden rounded-3xl bg-linear-to-r from-brand-red-deep via-brand-red to-brand-gold-deep p-8 shadow-2xl sm:p-12">
           <span className="relative z-10 inline-flex items-center gap-2 rounded-full bg-charcoal-deep/85 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-accent">
             🔥 Best Offer — New Arrival
           </span>
@@ -70,10 +70,6 @@ export function BestOffer() {
             </article>
           ))}
         </div>
-
-        <p className="mt-8 text-center text-sm font-semibold text-cream-foreground/60">
-          Prices in Pakistani Rupees · {formatRs(350)} onwards
-        </p>
       </div>
     </section>
   );
