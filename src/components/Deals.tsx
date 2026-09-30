@@ -22,7 +22,7 @@ export function Deals() {
           {DEALS.map((deal) => (
             <article
               key={deal.id}
-              className="group relative flex min-w-[250px] flex-1 flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-brand-red to-brand-red-deep p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl sm:min-w-0"
+              className="group relative flex min-w-62.5 flex-1 flex-col overflow-hidden rounded-2xl bg-linear-to-b from-brand-red to-brand-red-deep p-6 shadow-lg transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl sm:min-w-0"
             >
               <span className="absolute -right-4 -top-4 grid h-16 w-16 rotate-12 place-items-center rounded-full bg-accent font-display text-lg font-black text-accent-foreground shadow-md">
                 {deal.id}

@@ -3,22 +3,29 @@ import { FOOD_IMAGES } from "@/data/images";
 import { formatRs, CONTACT, MENU_ITEMS, type MenuItem } from "@/data/menu";
 import { useCart } from "./cart";
 
+const NEW_ARRIVAL_CATEGORIES = ["wings", "chicken", "soup"];
+
 function OfferCard({ item }: { item: MenuItem }) {
   const { addItem } = useCart();
   const [selected, setSelected] = useState(0);
-  const current = item.prices[selected];
+  const current = item.prices[selected] ?? item.prices[0]!;
+  const src = FOOD_IMAGES[item.image];
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
-      <div className="relative h-52 overflow-hidden">
-        <img
-          src={FOOD_IMAGES[item.image]}
-          alt={item.name}
-          loading="lazy"
-          width={1024}
-          height={1024}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+      <div className="relative h-52 overflow-hidden bg-black/5">
+        {src ? (
+          <img
+            src={src}
+            alt={item.name}
+            loading="lazy"
+            width={1024}
+            height={1024}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="grid h-full w-full place-items-center text-5xl">🍽️</div>
+        )}
         <span className="absolute right-4 top-4 rounded-full bg-accent px-3 py-1 text-xs font-black text-accent-foreground shadow">
           NEW
         </span>
@@ -27,7 +34,6 @@ function OfferCard({ item }: { item: MenuItem }) {
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-xl font-bold">{item.name}</h3>
 
-        {/* Option selector (5 Piece / 10 Piece, Full / Half, etc.) */}
         <div className="mt-3 flex flex-wrap gap-2">
           {item.prices.map((p, i) => (
             <button
@@ -54,7 +60,7 @@ function OfferCard({ item }: { item: MenuItem }) {
             type="button"
             onClick={() =>
               addItem({
-                key: `${item.name}-${current.label}`,
+                key: `${item.id}-${current.label}`,
                 name: item.name,
                 option: current.label,
                 price: current.value,
@@ -81,6 +87,8 @@ function OfferCard({ item }: { item: MenuItem }) {
 }
 
 export function BestOffer() {
+  const items = MENU_ITEMS.filter((i) => NEW_ARRIVAL_CATEGORIES.includes(i.category));
+
   return (
     <section className="bg-cream py-20 text-cream-foreground sm:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -94,7 +102,7 @@ export function BestOffer() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {MENU_ITEMS.map((item) => (
+          {items.map((item) => (
             <OfferCard key={item.id} item={item} />
           ))}
         </div>

@@ -6,7 +6,7 @@ export function DeliveryBanner() {
   return (
     <section
       id="delivery"
-      className="relative overflow-hidden bg-gradient-to-r from-charcoal-deep via-brand-red-deep to-charcoal-deep py-20 sm:py-24"
+      className="relative overflow-hidden bg-linear-to-r from-charcoal-deep via-brand-red-deep to-charcoal-deep py-20 sm:py-24"
     >
       <div
         className="absolute inset-0 opacity-15"
