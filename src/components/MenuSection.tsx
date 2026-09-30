@@ -24,11 +24,12 @@ function MenuItemCard({ item }: { item: MenuItem }) {
   const [selected, setSelected] = useState(0);
   const { addItem } = useCart();
   const price = item.prices[selected] ?? item.prices[0]!;
-  const src = FOOD_IMAGES[item.image];
+  const src = FOOD_IMAGES[item.id] ?? FOOD_IMAGES[item.image];
+  const isDrink = item.category === "drinks";
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-charcoal-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.8)]">
-      <div className="relative h-44 overflow-hidden bg-charcoal-deep">
+      <div className={`relative h-44 overflow-hidden ${isDrink ? "bg-white" : "bg-charcoal-deep"}`}>
         {src ? (
           <img
             src={src}
@@ -36,7 +37,9 @@ function MenuItemCard({ item }: { item: MenuItem }) {
             loading="lazy"
             width={1024}
             height={1024}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${
+              isDrink ? "object-contain p-3" : "object-cover group-hover:scale-110"
+            }`}
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-5xl">🍽️</div>
@@ -92,12 +95,24 @@ function MenuItemCard({ item }: { item: MenuItem }) {
 function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) {
   const { addItem } = useCart();
   const badge = deal.badge ?? `Deal ${deal.id}`;
+  const src = FOOD_IMAGES[`deal-${deal.id}`];
+
   return (
     <article
       className={`group relative flex flex-col overflow-hidden rounded-2xl bg-linear-to-br from-brand-red to-brand-red-deep p-6 shadow-lg ring-1 ring-brand-gold/40 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] ${
         compact ? "" : "min-w-67.5"
       }`}
     >
+      {src && (
+        <div className="-mx-6 -mt-6 mb-5 h-44 overflow-hidden bg-charcoal-deep">
+          <img
+            src={src}
+            alt={deal.title}
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </div>
+      )}
       <span className="inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-xs font-black uppercase tracking-wide text-accent-foreground">
         🎓 {badge}
       </span>
@@ -127,7 +142,6 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
     </article>
   );
 }
-
 function Block({
   title,
   note,
