@@ -14,7 +14,7 @@ cloudinary.config({
 });
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
+app.use(cors());
 app.use(express.json());
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 

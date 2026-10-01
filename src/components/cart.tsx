@@ -1,4 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { PAYMENT } from "@/data/menu";
 
 export type CartItem = {
   key: string;
@@ -22,6 +23,8 @@ type CartContextValue = {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
+// Order isi number par jayega. Screenshot bhi isi chat mein aayega.
+// Agar screenshot 03151997888 par chahiye to "923151997888" likh dein.
 const WHATSAPP_NUMBER = "923348457676";
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -47,8 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         .filter((i) => i.qty > 0),
     );
 
-  const removeItem = (key: string) =>
-    setItems((prev) => prev.filter((i) => i.key !== key));
+  const removeItem = (key: string) => setItems((prev) => prev.filter((i) => i.key !== key));
 
   const clear = () => setItems([]);
 
@@ -57,12 +59,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const whatsappUrl = useMemo(() => {
     const lines = items.map(
-      (i) => `• ${i.qty}× ${i.name} (${i.option}) — Rs.${(i.price * i.qty).toLocaleString("en-PK")}`,
+      (i) =>
+        `• ${i.qty}× ${i.name} (${i.option}) — Rs.${(i.price * i.qty).toLocaleString("en-PK")}`,
     );
     const text =
       "Assalam-o-Alaikum! I would like to order:\n\n" +
       lines.join("\n") +
-      `\n\nTotal: Rs.${total.toLocaleString("en-PK")}`;
+      `\n\nTotal: Rs.${total.toLocaleString("en-PK")}` +
+      `\n\nPayment: ${PAYMENT.methods.join(" / ")} (${PAYMENT.number}) ya Cash on Delivery.` +
+      `\nAgar online payment ki hai to screenshot is chat mein bhej raha hoon.`;
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   }, [items, total]);
 

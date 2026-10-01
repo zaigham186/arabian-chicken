@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FOOD_IMAGES } from "@/data/images";
-import { formatRs, CONTACT, MENU_ITEMS, type MenuItem } from "@/data/menu";
+import { formatRs, CONTACT, type MenuItem } from "@/data/menu";
+import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
 
 const NEW_ARRIVAL_CATEGORIES = ["wings", "chicken", "soup"];
@@ -9,7 +10,7 @@ function OfferCard({ item }: { item: MenuItem }) {
   const { addItem } = useCart();
   const [selected, setSelected] = useState(0);
   const current = item.prices[selected] ?? item.prices[0]!;
-  const src = FOOD_IMAGES[item.image];
+  const src = item.imageUrl || FOOD_IMAGES[item.id] || FOOD_IMAGES[item.image];
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
@@ -19,8 +20,6 @@ function OfferCard({ item }: { item: MenuItem }) {
             src={src}
             alt={item.name}
             loading="lazy"
-            width={1024}
-            height={1024}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
         ) : (
@@ -87,7 +86,8 @@ function OfferCard({ item }: { item: MenuItem }) {
 }
 
 export function BestOffer() {
-  const items = MENU_ITEMS.filter((i) => NEW_ARRIVAL_CATEGORIES.includes(i.category));
+  const { items: all } = useMenuData();
+  const items = all.filter((i) => NEW_ARRIVAL_CATEGORIES.includes(i.category));
 
   return (
     <section className="bg-cream py-20 text-cream-foreground sm:py-24">

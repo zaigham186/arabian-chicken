@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { formatRs } from "@/data/menu";
 import { useCart } from "./cart";
+import { PaymentInfo } from "./PaymentInfo";
 
 export function CartWidget() {
   const [open, setOpen] = useState(false);
@@ -49,7 +50,9 @@ export function CartWidget() {
             {items.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
                 <span className="text-5xl">🍕</span>
-                <p className="font-display text-lg font-bold text-foreground">Your order is empty</p>
+                <p className="font-display text-lg font-bold text-foreground">
+                  Your order is empty
+                </p>
                 <p className="text-sm font-medium text-muted-foreground">
                   Add items from the menu, then send your order on WhatsApp.
                 </p>
@@ -117,7 +120,7 @@ export function CartWidget() {
                   ))}
                 </ul>
 
-                <div className="border-t border-border p-5">
+                <div className="max-h-[55vh] overflow-y-auto border-t border-border p-5">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-bold uppercase tracking-wide text-muted-foreground">
                       Total
@@ -126,6 +129,9 @@ export function CartWidget() {
                       {formatRs(total)}
                     </span>
                   </div>
+
+                  <PaymentInfo className="mt-4" />
+
                   <a
                     href={whatsappUrl}
                     target="_blank"

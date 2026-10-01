@@ -12,17 +12,20 @@ export type MenuCategory =
   | "fries"
   | "related"
   | "drinks"
-  // sirf New Arrival section ke liye (menu tabs mein nahi dikhengi)
+  // sirf New Arrival / Family section ke liye (menu tabs mein nahi)
   | "wings"
   | "chicken"
-  | "soup";
+  | "soup"
+  | "family-extras";
 
 export type MenuItem = {
   id: string;
   name: string;
   category: MenuCategory;
-  group?: "hot" | "crust" | "extras"; // sirf pizza tab ke sections ke liye
+  group?: "hot" | "crust" | "extras";
   image: string;
+  imageUrl?: string;
+  available?: boolean;
   description?: string;
   prices: PriceOption[];
   tag?: string;
@@ -97,7 +100,7 @@ const extra = (
   category: "pizza",
   group: "extras",
   image,
-  ...(description !== undefined ? { description } : {}),
+  ...(description === undefined ? {} : { description }),
   prices,
 });
 
@@ -134,7 +137,7 @@ const simple = (
 
 export const EXTRA_TOPPING = "Extra Topping: S Rs.100 · M Rs.150 · L Rs.200 · XL Rs.300";
 
-/* ---------- menu ---------- */
+/* ---------- menu (seed script isi se data parhti hai) ---------- */
 export const MENU_ITEMS: MenuItem[] = [
   /* ===== PIZZA (Hot Pizza) ===== */
   pizza(
@@ -452,7 +455,7 @@ export const MENU_ITEMS: MenuItem[] = [
   simple("drink-sting", "Sting (500ml)", "drinks", "cat-drinks", [["Each", 150]]),
   simple("extra-cheese", "Extra Cheese", "drinks", "cat-drinks", [["Add-on", 50]]),
 
-  /* ===== NEW ARRIVAL (sirf New Arrival section mein dikhengi) ===== */
+  /* ===== NEW ARRIVAL ===== */
   {
     id: "baked-wings",
     name: "Baked Wings",
@@ -532,14 +535,16 @@ export const MENU_ITEMS: MenuItem[] = [
   },
 ];
 
-/* ---------- deals (pizza page) ---------- */
+/* ---------- deals ---------- */
 export type Deal = {
-  id: number;
+  id: number | string;
   title: string;
   contents: string;
   price: number;
   badge?: string;
-  group: "deal" | "double";
+  imageUrl?: string;
+  available?: boolean;
+  group: "deal" | "double" | "family";
 };
 
 export const DEALS: Deal[] = [
@@ -620,7 +625,7 @@ export const DEALS: Deal[] = [
     id: 10,
     badge: "Double Deal 2",
     title: "2 Small Pizza",
-    contents: "2 Small Pizza",
+    contents: "2 Small Pizza · Flavour: Crown Crust",
     price: 1250,
     group: "double",
   },
@@ -659,6 +664,11 @@ export const CONTACT = {
   address: "Syed Qamar Abbas Road, Gulbahar No.2, Near Govt Girls School, Peshawar",
   mapEmbed:
     "https://maps.google.com/maps?q=Gulbahar%20No.2%20Peshawar&t=&z=15&ie=UTF8&iwloc=&output=embed",
+};
+export const PAYMENT = {
+  number: "03151997888",
+  accountName: "", // chahein to account holder ka naam likh dein, jaise "Arabian Chick"
+  methods: ["Easypaisa", "JazzCash"],
 };
 
 export function formatRs(value: number): string {

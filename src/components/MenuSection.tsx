@@ -2,14 +2,13 @@ import { useState } from "react";
 import { FOOD_IMAGES } from "@/data/images";
 import {
   CATEGORIES,
-  DEALS,
   EXTRA_TOPPING,
-  MENU_ITEMS,
   formatRs,
   type Deal,
   type MenuCategory,
   type MenuItem,
 } from "@/data/menu";
+import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
 
 type Tab = MenuCategory | "all";
@@ -20,29 +19,41 @@ const PIZZA_GROUPS: { id: NonNullable<MenuItem["group"]>; title: string; note?: 
   { id: "extras", title: "Extras & Rolls" },
 ];
 
+/* Image poore box ko bhar de */
+function FullImage({
+  src,
+  alt,
+  className = "h-44",
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <div className={`relative overflow-hidden bg-charcoal-deep ${className}`}>
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+      />
+    </div>
+  );
+}
+
 function MenuItemCard({ item }: { item: MenuItem }) {
   const [selected, setSelected] = useState(0);
   const { addItem } = useCart();
   const price = item.prices[selected] ?? item.prices[0]!;
-  const src = FOOD_IMAGES[item.id] ?? FOOD_IMAGES[item.image];
-  const isDrink = item.category === "drinks";
+  const src = item.imageUrl || FOOD_IMAGES[item.id] || FOOD_IMAGES[item.image];
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-charcoal-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.8)]">
-      <div className={`relative h-44 overflow-hidden ${isDrink ? "bg-white" : "bg-charcoal-deep"}`}>
+      <div className="relative">
         {src ? (
-          <img
-            src={src}
-            alt={item.name}
-            loading="lazy"
-            width={1024}
-            height={1024}
-            className={`h-full w-full transition-transform duration-500 group-hover:scale-105 ${
-              isDrink ? "object-contain p-3" : "object-cover group-hover:scale-110"
-            }`}
-          />
+          <FullImage src={src} alt={item.name} />
         ) : (
-          <div className="grid h-full w-full place-items-center text-5xl">🍽️</div>
+          <div className="grid h-44 w-full place-items-center bg-charcoal-deep text-5xl">🍽️</div>
         )}
         {item.tag && (
           <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[11px] font-black uppercase tracking-wide text-accent-foreground">
@@ -57,7 +68,7 @@ function MenuItemCard({ item }: { item: MenuItem }) {
             {item.description}
           </p>
         )}
-        <div className="mt-3 flex flex-wrap gap-2">
+        <div className="mb-5 mt-3 flex flex-wrap gap-2">
           {item.prices.map((p, i) => (
             <button
               key={p.label}
@@ -83,7 +94,7 @@ function MenuItemCard({ item }: { item: MenuItem }) {
               price: price.value,
             })
           }
-          className="mt-5 flex h-11 w-full items-center justify-center rounded-lg bg-primary pt-0 font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
+          className="mt-auto flex h-11 w-full items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
         >
           Add to Order
         </button>
@@ -95,7 +106,7 @@ function MenuItemCard({ item }: { item: MenuItem }) {
 function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) {
   const { addItem } = useCart();
   const badge = deal.badge ?? `Deal ${deal.id}`;
-  const src = FOOD_IMAGES[`deal-${deal.id}`];
+  const src = deal.imageUrl || FOOD_IMAGES[String(deal.id)];
 
   return (
     <article
@@ -104,13 +115,8 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
       }`}
     >
       {src && (
-        <div className="-mx-6 -mt-6 mb-5 h-44 overflow-hidden bg-charcoal-deep">
-          <img
-            src={src}
-            alt={deal.title}
-            loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-          />
+        <div className="-mx-6 -mt-6 mb-5">
+          <FullImage src={src} alt={deal.title} />
         </div>
       )}
       <span className="inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-xs font-black uppercase tracking-wide text-accent-foreground">
@@ -142,6 +148,7 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
     </article>
   );
 }
+
 function Block({
   title,
   note,
@@ -162,11 +169,11 @@ function Block({
 
 export function MenuSection() {
   const [active, setActive] = useState<Tab>("all");
+  const { items: allItems, deals, loading, error } = useMenuData();
   const show = (c: MenuCategory) => active === "all" || active === c;
 
-  const byCategory = (c: MenuCategory) => MENU_ITEMS.filter((i) => i.category === c);
+  const byCategory = (c: MenuCategory) => allItems.filter((i) => i.category === c);
 
-  // Pizza ke ilawa saari tabs (Meals, China, Burgers, ...) isi order mein
   const otherTabs = CATEGORIES.filter(
     (c): c is { id: MenuCategory; label: string } => c.id !== "all" && c.id !== "pizza",
   );
@@ -205,27 +212,34 @@ export function MenuSection() {
           ))}
         </div>
 
+        {loading && <p className="mt-10 text-muted-foreground">Loading menu...</p>}
+        {error && <p className="mt-10 text-accent">Menu load nahi hua. Dobara try karein.</p>}
+
         {/* PIZZA */}
         {show("pizza") && (
           <>
             {PIZZA_GROUPS.map((g) => (
               <Block key={g.id} title={g.title} note={g.note}>
-                {MENU_ITEMS.filter((i) => i.category === "pizza" && i.group === g.id).map(
-                  (item) => (
+                {allItems
+                  .filter((i) => i.category === "pizza" && i.group === g.id)
+                  .map((item) => (
                     <MenuItemCard key={item.id} item={item} />
-                  ),
-                )}
+                  ))}
               </Block>
             ))}
             <Block title="Double Deals">
-              {DEALS.filter((d) => d.group === "double").map((d) => (
-                <DealCard key={d.id} deal={d} compact />
-              ))}
+              {deals
+                .filter((d) => d.group === "double")
+                .map((d) => (
+                  <DealCard key={String(d.id)} deal={d} compact />
+                ))}
             </Block>
             <Block title="Pizza Deals">
-              {DEALS.filter((d) => d.group === "deal").map((d) => (
-                <DealCard key={d.id} deal={d} compact />
-              ))}
+              {deals
+                .filter((d) => d.group === "deal")
+                .map((d) => (
+                  <DealCard key={String(d.id)} deal={d} compact />
+                ))}
             </Block>
           </>
         )}

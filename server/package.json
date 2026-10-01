@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch index.js",
-  "seed": "tsx seed.js"
+    "seed": "tsx seed.js",
+    "seed:extra": "tsx seed-extra.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "cloudinary": "^2.11.0",
     "cors": "^2.8.6",
