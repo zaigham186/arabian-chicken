@@ -651,7 +651,7 @@ export const DEALS: Deal[] = [
 ];
 
 export const CONTACT = {
-  phones: ["091-2212777", "0334-8457676", "0346-9827796", "0312-80843480"],
+  phones: ["091-2212777", "0334-8457676", "0342-9201920"],
   whatsapp: "0334-8457676",
   whatsappLink: "https://wa.me/923348457676",
   facebook: "https://facebook.com/arabianchickgulbahar",

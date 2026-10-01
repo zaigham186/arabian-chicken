@@ -1,31 +1,51 @@
 import { useEffect, useRef, useState } from "react";
 import aboutImg from "@/assets/about.jpg";
 
-const STATS = [
-  { icon: "🍕", label: "10+ Pizza Varieties" },
-  { icon: "🍗", label: "Fresh Wings Daily" },
-  { icon: "🛵", label: "Fast Home Delivery" },
+const FEATURES = [
+  {
+    icon: "🍕",
+    title: "Handcrafted Pizza",
+    description: "Fresh dough, rich toppings & bold flavors.",
+  },
+  {
+    icon: "🍗",
+    title: "Fresh Chicken",
+    description: "Prepared fresh with our signature recipes.",
+  },
+  {
+    icon: "🔥",
+    title: "Made Fresh",
+    description: "Every order is prepared with care.",
+  },
+  {
+    icon: "🛵",
+    title: "Fast Delivery",
+    description: "Hot & fresh food delivered to your door.",
+  },
 ];
 
-/* Section screen par aate hi animation trigger karta hai */
 function useInView<T extends HTMLElement>(threshold = 0.2) {
   const ref = useRef<T>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
+    const element = ref.current;
+
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
           setInView(true);
-          obs.disconnect();
+          observer.disconnect();
         }
       },
-      { threshold }
+      { threshold },
     );
-    obs.observe(el);
-    return () => obs.disconnect();
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
   }, [threshold]);
 
   return { ref, inView };
@@ -33,98 +53,246 @@ function useInView<T extends HTMLElement>(threshold = 0.2) {
 
 export function About() {
   const { ref, inView } = useInView<HTMLElement>();
-  const imgWrapRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
 
-  /* Image par mouse ke saath halka 3D tilt */
-  const handleMove = (e: React.MouseEvent) => {
-    const el = imgWrapRef.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const x = ((e.clientX - r.left) / r.width - 0.5) * 2;
-    const y = ((e.clientY - r.top) / r.height - 0.5) * 2;
-    el.style.transform = `rotateY(${x * 6}deg) rotateX(${-y * 6}deg)`;
+  const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const element = imageRef.current;
+
+    if (!element) return;
+
+    const rect = element.getBoundingClientRect();
+
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    element.style.transform = `
+      perspective(1000px)
+      rotateY(${x * 5}deg)
+      rotateX(${-y * 5}deg)
+    `;
   };
+
   const handleLeave = () => {
-    if (imgWrapRef.current) imgWrapRef.current.style.transform = "rotateY(0) rotateX(0)";
+    if (!imageRef.current) return;
+
+    imageRef.current.style.transform = `
+      perspective(1000px)
+      rotateY(0deg)
+      rotateX(0deg)
+    `;
   };
 
   return (
     <section
       ref={ref}
       id="about"
-      data-inview={inView}
-      className="about-section relative overflow-hidden bg-cream py-20 text-cream-foreground sm:py-24"
+      className="relative overflow-hidden bg-cream py-20 sm:py-24 lg:py-32"
     >
-      {/* Peeche halke floating blobs */}
-      <div className="pointer-events-none absolute -left-24 top-10 h-72 w-72 animate-blob rounded-full bg-brand-red/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 bottom-0 h-80 w-80 animate-blob rounded-full bg-brand-gold/20 blur-3xl [animation-delay:-6s]" />
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-brand-red/10 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
-        {/* Left: text */}
-        <div>
-          <span className="about-reveal about-d1 inline-block text-xs font-black uppercase tracking-[0.2em] text-brand-red">
-            About Us
-          </span>
-          <h2 className="about-reveal about-d2 heading-underline mt-2 font-display text-4xl font-black text-balance sm:text-5xl">
-            About Arabian Chick, N
+      <div className="pointer-events-none absolute -right-40 bottom-0 h-96 w-96 rounded-full bg-brand-gold/15 blur-3xl" />
+
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.035]"
+        style={{
+          backgroundImage: "radial-gradient(circle at 1px 1px, #000 1px, transparent 0)",
+          backgroundSize: "34px 34px",
+        }}
+      />
+
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20 lg:px-8">
+        {/* =====================================================
+            IMAGE
+        ===================================================== */}
+        <div
+          className={`relative order-2 lg:order-1 ${
+            inView ? "about-image-visible" : "about-image-hidden"
+          }`}
+        >
+          <div
+            ref={imageRef}
+            onMouseMove={handleMove}
+            onMouseLeave={handleLeave}
+            className="relative mx-auto max-w-xl transition-transform duration-300 ease-out"
+          >
+            {/* Decorative frame */}
+            <div className="absolute -bottom-4 -left-4 h-full w-full rounded-[2rem] bg-linear-to-br from-brand-red via-brand-red-deep to-brand-gold sm:-bottom-5 sm:-left-5" />
+
+            {/* Image card */}
+            <div className="group relative overflow-hidden rounded-[2rem] bg-white p-2 shadow-2xl">
+              <div className="relative overflow-hidden rounded-[1.5rem]">
+                <img
+                  src={aboutImg}
+                  alt="Fresh food being prepared at Arabian Chick, N"
+                  loading="lazy"
+                  width={1024}
+                  height={1024}
+                  className="aspect-4/5 w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+
+                {/* Image gradient */}
+                <div className="absolute inset-0 bg-linear-to-t from-black/55 via-transparent to-transparent opacity-70" />
+
+                {/* Shine */}
+                <div className="pointer-events-none absolute inset-y-0 -left-full w-1/2 skew-x-[-20deg] bg-linear-to-r from-transparent via-white/20 to-transparent transition-all duration-1000 group-hover:left-[120%]" />
+
+                {/* Image label */}
+                <div className="absolute bottom-5 left-5 right-5">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/30 px-4 py-2 backdrop-blur-md">
+                    <span className="h-2 w-2 rounded-full bg-brand-gold shadow-[0_0_10px_var(--brand-gold)]" />
+                    <span className="text-xs font-bold uppercase tracking-[0.15em] text-white">
+                      Fresh From Our Kitchen
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Experience badge */}
+            <div className="absolute -bottom-7 right-4 z-10 rounded-2xl bg-white px-5 py-4 shadow-2xl ring-1 ring-black/5 sm:-right-6 sm:px-6">
+              <div className="flex items-center gap-3">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-red/10 text-xl">
+                  ⭐
+                </span>
+
+                <div>
+                  <p className="font-display text-sm font-black text-brand-red">Loved by Foodies</p>
+
+                  <p className="mt-0.5 text-xs font-medium text-cream-foreground/60">
+                    Quality in every bite
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =====================================================
+            CONTENT
+        ===================================================== */}
+        <div
+          className={`order-1 lg:order-2 ${
+            inView ? "about-content-visible" : "about-content-hidden"
+          }`}
+        >
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 bg-brand-red" />
+
+            <span className="text-xs font-black uppercase tracking-[0.25em] text-brand-red">
+              About Arabian Chick, N
+            </span>
+          </div>
+
+          {/* Heading */}
+          <h2 className="mt-4 max-w-2xl font-display text-4xl font-black leading-[1.08] tracking-tight text-cream-foreground sm:text-5xl lg:text-6xl">
+            Good Food.
+            <span className="block text-brand-red">Great Moments.</span>
           </h2>
-          <p className="about-reveal about-d3 mt-7 text-lg font-medium leading-relaxed text-cream-foreground/80">
-            Arabian Chick, N is Peshawar&apos;s go-to destination for crispy
-            wings, sizzling BBQ, and handcrafted pizzas. We&apos;re passionate
-            about bold flavors, generous portions, and lightning-fast delivery.
+
+          {/* Description */}
+          <p className="mt-6 max-w-2xl text-base leading-8 text-cream-foreground/70 sm:text-lg">
+            At Arabian Chick, N, we believe great food brings people together. From crispy chicken
+            and sizzling BBQ to handcrafted pizzas, every dish is prepared with fresh ingredients
+            and packed with flavor.
           </p>
 
-          <div className="mt-10 grid gap-4 sm:grid-cols-3">
-            {STATS.map((stat, i) => (
+          <p className="mt-4 max-w-2xl text-sm leading-7 text-cream-foreground/60 sm:text-base">
+            Whether you&apos;re dining with family, meeting friends, or ordering from home, our goal
+            is simple — serve delicious food that keeps you coming back.
+          </p>
+
+          {/* Feature grid */}
+          <div className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {FEATURES.map((feature, index) => (
               <div
-                key={stat.label}
-                className="about-reveal group rounded-2xl bg-white p-5 text-center shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl hover:ring-brand-red/30"
-                style={{ transitionDelay: `${0.5 + i * 0.15}s`, animationDelay: `${0.5 + i * 0.15}s` }}
+                key={feature.title}
+                className="group rounded-2xl border border-black/5 bg-white/80 p-4 shadow-sm backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-red/20 hover:shadow-lg"
+                style={{
+                  transitionDelay: `${index * 80}ms`,
+                }}
               >
-                <span className="animate-bob inline-block text-3xl transition-transform duration-300 group-hover:scale-125" style={{ animationDelay: `${i * 0.4}s` }}>
-                  {stat.icon}
-                </span>
-                <p className="mt-2 text-sm font-bold leading-snug">{stat.label}</p>
+                <div className="flex items-start gap-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-red/10 text-xl transition-transform duration-300 group-hover:scale-110">
+                    {feature.icon}
+                  </span>
+
+                  <div>
+                    <h3 className="font-display text-sm font-black text-cream-foreground">
+                      {feature.title}
+                    </h3>
+
+                    <p className="mt-1 text-xs leading-5 text-cream-foreground/55">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Right: image */}
-        <div className="about-image-reveal relative perspective-[                                                                                                       1000px]">
-          <div
-            ref={imgWrapRef}
-            onMouseMove={handleMove}
-            onMouseLeave={handleLeave}
-            className="relative transition-transform duration-300 ease-out transform-3d"
-          >
-            {/* Gradient frame: halka hilta rehta hai */}
-            <div className="animate-frame absolute -left-4 -top-4 h-full w-full rounded-3xl bg-linear-to-br from-brand-red to-brand-gold" />
-
-            <div className="group relative overflow-hidden rounded-3xl shadow-2xl">
-              <img
-                src={aboutImg}
-                alt="Chef at Arabian Chick, N pulling a fresh pizza from the oven"
-                loading="lazy"
-                width={1024}
-                height={1024}
-                className="h-full max-h-130 w-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              {/* Shine effect */}
-              <div className="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
-            </div>
-
-            {/* Floating badge */}
-            <div
-              className="animate-bob absolute -bottom-5 left-6 rounded-2xl bg-white px-5 py-3 shadow-xl ring-1 ring-black/5"
-              style={{ transform: "translateZ(40px)" }}
+          {/* CTA */}
+          <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <a
+              href="#menu"
+              className="inline-flex h-13 items-center justify-center rounded-xl bg-brand-red px-7 font-display text-sm font-black text-white shadow-lg shadow-brand-red/20 transition-all duration-300 hover:-translate-y-1 hover:bg-brand-red-deep hover:shadow-xl hover:shadow-brand-red/25"
             >
-              <p className="font-display text-sm font-black text-brand-red">🔥 Hot &amp; Fresh</p>
-              <p className="text-xs font-semibold text-cream-foreground/70">Straight from the oven</p>
-            </div>
+              Explore Our Menu
+              <span className="ml-2 transition-transform duration-300 group-hover:translate-x-1">
+                →
+              </span>
+            </a>
+
+            <a
+              href="#delivery"
+              className="inline-flex h-13 items-center justify-center rounded-xl border-2 border-brand-red/15 px-7 font-display text-sm font-bold text-brand-red transition-all duration-300 hover:border-brand-red hover:bg-brand-red/5"
+            >
+              Order Now
+            </a>
           </div>
         </div>
       </div>
+
+      {/* Simple reveal animations */}
+      <style>{`
+        .about-image-hidden {
+          opacity: 0;
+          transform: translateX(-35px);
+        }
+
+        .about-image-visible {
+          opacity: 1;
+          transform: translateX(0);
+          transition:
+            opacity 800ms ease,
+            transform 800ms ease;
+        }
+
+        .about-content-hidden {
+          opacity: 0;
+          transform: translateX(35px);
+        }
+
+        .about-content-visible {
+          opacity: 1;
+          transform: translateX(0);
+          transition:
+            opacity 800ms ease 150ms,
+            transform 800ms ease 150ms;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .about-image-hidden,
+          .about-image-visible,
+          .about-content-hidden,
+          .about-content-visible {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }

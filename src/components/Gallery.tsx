@@ -101,13 +101,13 @@ export function Gallery() {
                 alt={shot.name}
                 loading={index < 3 ? "eager" : "lazy"}
                 className={`
-                  h-full min-h-[250px] w-full object-cover
+                  h-full min-h-62.5 w-full object-cover
                   transition-all duration-700 ease-out
                   group-hover:scale-110
                   ${
                     index === 0
-                      ? "h-[420px] sm:h-[520px]"
-                      : "h-[260px] sm:h-[280px]"
+                      ? "h-105 sm:h-130"
+                      : "h-65 sm:h-70"
                   }
                 `}
               />
@@ -116,7 +116,7 @@ export function Gallery() {
               <div
                 className="
                   absolute inset-0
-                  bg-gradient-to-t
+                  bg-linear-to-t
                   from-black/85 via-black/20 to-transparent
                   opacity-70
                   transition-opacity duration-500
