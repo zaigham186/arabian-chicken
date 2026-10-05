@@ -2,27 +2,22 @@ import { useState } from "react";
 import { CONTACT, formatRs, type Deal, type MenuItem } from "@/data/menu";
 import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
+import { SmartImage } from "./SmartImage";
 
-function FullImage({ src, alt }: { src?: string | undefined; alt: string }) {
+function CardImage({ src, alt }: { src?: string | undefined; alt: string }) {
   if (!src)
     return <div className="grid h-56 place-items-center bg-charcoal-deep text-5xl">🍽️</div>;
-  return (
-    <div className="relative h-56 overflow-hidden bg-charcoal-deep">
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-      />
-    </div>
-  );
+  return <SmartImage src={src} alt={alt} className="h-56" />;
 }
 
 function FamilyCard({ deal }: { deal: Deal }) {
   const { addItem } = useCart();
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl bg-linear-to-b from-brand-red to-brand-red-deep shadow-lg ring-1 ring-brand-gold/40 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl">
-      <FullImage src={deal.imageUrl} alt={deal.title} />
+    <article
+      id={`deal-${deal.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-linear-to-b from-brand-red to-brand-red-deep shadow-lg ring-1 ring-brand-gold/40 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl"
+    >
+      <CardImage src={deal.imageUrl} alt={deal.title} />
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-xl font-black text-primary-foreground">{deal.title}</h3>
         <p className="mt-2 flex-1 text-sm font-medium leading-relaxed text-primary-foreground/85">
@@ -42,7 +37,7 @@ function FamilyCard({ deal }: { deal: Deal }) {
                 price: deal.price,
               })
             }
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-black text-accent-foreground transition-colors hover:bg-foreground"
+            className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-black text-accent-foreground transition-colors hover:bg-foreground"
           >
             Add to Order
           </button>
@@ -58,8 +53,11 @@ function SizedCard({ item }: { item: MenuItem }) {
   const current = item.prices[selected] ?? item.prices[0]!;
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
-      <FullImage src={item.imageUrl} alt={item.name} />
+    <article
+      id={`item-${item.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
+    >
+      <CardImage src={item.imageUrl} alt={item.name} />
       <div className="flex flex-1 flex-col p-5">
         <h3 className="font-display text-lg font-bold">{item.name}</h3>
         {item.prices.length > 1 && (
@@ -69,7 +67,7 @@ function SizedCard({ item }: { item: MenuItem }) {
                 key={p.label}
                 type="button"
                 onClick={() => setSelected(i)}
-                className={`rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
+                className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
                   i === selected
                     ? "border-brand-red bg-brand-red text-primary-foreground"
                     : "border-black/15 text-cream-foreground/80 hover:border-brand-red"
@@ -93,7 +91,7 @@ function SizedCard({ item }: { item: MenuItem }) {
               price: current.value,
             })
           }
-          className="mt-auto flex h-11 w-full items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
+          className="mt-auto flex h-11 w-full cursor-pointer items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
         >
           Add to Order
         </button>

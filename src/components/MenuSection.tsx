@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FOOD_IMAGES } from "@/data/images";
 import {
   CATEGORIES,
   EXTRA_TOPPING,
+  TOPPING_OPTIONS,
+  toppingPriceFor,
   formatRs,
   type Deal,
   type MenuCategory,
@@ -10,6 +12,7 @@ import {
 } from "@/data/menu";
 import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
+import { SmartImage } from "./SmartImage";
 
 type Tab = MenuCategory | "all";
 
@@ -19,41 +22,34 @@ const PIZZA_GROUPS: { id: NonNullable<MenuItem["group"]>; title: string; note?: 
   { id: "extras", title: "Extras & Rolls" },
 ];
 
-/* Image poore box ko bhar de */
-function FullImage({
-  src,
-  alt,
-  className = "h-44",
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-}) {
-  return (
-    <div className={`relative overflow-hidden bg-charcoal-deep ${className}`}>
-      <img
-        src={src}
-        alt={alt}
-        loading="lazy"
-        className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-      />
-    </div>
-  );
-}
-
 function MenuItemCard({ item }: { item: MenuItem }) {
   const [selected, setSelected] = useState(0);
+  const [toppings, setToppings] = useState<string[]>([]);
+  const [showToppings, setShowToppings] = useState(false);
   const { addItem } = useCart();
   const price = item.prices[selected] ?? item.prices[0]!;
   const src = item.imageUrl || FOOD_IMAGES[item.id] || FOOD_IMAGES[item.image];
 
+  const isPizza = item.category === "pizza" && (item.group === "hot" || item.group === "crust");
+  const perTopping = isPizza ? toppingPriceFor(price.label) : null;
+  const canTopping = perTopping !== null;
+  const activeToppings = canTopping ? toppings : [];
+  const toppingTotal = activeToppings.length * (perTopping ?? 0);
+  const finalPrice = price.value + toppingTotal;
+
+  const toggleTopping = (t: string) =>
+    setToppings((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
+
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-charcoal-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.8)]">
+    <article
+      id={`item-${item.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-charcoal-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-[0_16px_40px_-16px_rgba(0,0,0,0.8)]"
+    >
       <div className="relative">
         {src ? (
-          <FullImage src={src} alt={item.name} />
+          <SmartImage src={src} alt={item.name} className="h-48" />
         ) : (
-          <div className="grid h-44 w-full place-items-center bg-charcoal-deep text-5xl">🍽️</div>
+          <div className="grid h-48 w-full place-items-center bg-charcoal-deep text-5xl">🍽️</div>
         )}
         {item.tag && (
           <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[11px] font-black uppercase tracking-wide text-accent-foreground">
@@ -68,33 +64,111 @@ function MenuItemCard({ item }: { item: MenuItem }) {
             {item.description}
           </p>
         )}
-        <div className="mb-5 mt-3 flex flex-wrap gap-2">
-          {item.prices.map((p, i) => (
+
+        {item.prices.length > 1 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.prices.map((p, i) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => setSelected(i)}
+                className={`rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
+                  i === selected
+                    ? "bg-accent text-accent-foreground"
+                    : "border border-border bg-transparent text-foreground/75 hover:border-accent/60"
+                }`}
+              >
+                {p.label} · {formatRs(p.value)}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {isPizza && (
+          <div className="mt-3 rounded-lg border border-border bg-charcoal-deep">
             <button
-              key={p.label}
               type="button"
-              onClick={() => setSelected(i)}
-              className={`rounded-full px-3 py-1.5 text-xs font-bold transition-colors ${
-                i === selected
-                  ? "bg-accent text-accent-foreground"
-                  : "border border-border bg-transparent text-foreground/75 hover:border-accent/60"
-              }`}
+              onClick={() => setShowToppings((v) => !v)}
+              className="flex w-full items-center justify-between px-3 py-2 text-left"
             >
-              {p.label} · {formatRs(p.value)}
+              <span className="text-[11px] font-black uppercase tracking-wide text-accent">
+                Extra Toppings
+                {canTopping && (
+                  <span className="ml-1 normal-case text-foreground/70">
+                    ({formatRs(perTopping!)} each)
+                  </span>
+                )}
+                {activeToppings.length > 0 && (
+                  <span className="ml-2 rounded-full bg-primary px-2 py-0.5 text-[10px] text-primary-foreground">
+                    {activeToppings.length}
+                  </span>
+                )}
+              </span>
+              <span className="text-xs text-foreground/70">{showToppings ? "▲" : "▼"}</span>
             </button>
-          ))}
+
+            {showToppings && (
+              <div className="border-t border-border px-3 pb-3 pt-2">
+                {canTopping ? (
+                  <div className="max-h-28 overflow-y-auto">
+                    <div className="flex flex-wrap gap-1">
+                      {TOPPING_OPTIONS.map((t) => {
+                        const on = toppings.includes(t);
+                        return (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => toggleTopping(t)}
+                            className={`rounded-full px-2 py-0.5 text-[10px] font-bold transition-colors ${
+                              on
+                                ? "bg-primary text-primary-foreground"
+                                : "border border-border text-foreground/75 hover:border-accent/60"
+                            }`}
+                          >
+                            {on ? "✓ " : "+ "}
+                            {t}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    Extra topping is not available for this size.
+                  </p>
+                )}
+                {activeToppings.length > 0 && (
+                  <p className="mt-2 text-xs font-bold text-foreground">
+                    {activeToppings.length} topping = +{formatRs(toppingTotal)}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="mb-3 mt-3 flex items-center justify-between">
+          <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            Total
+          </span>
+          <span className="font-display text-xl font-black text-accent">{formatRs(finalPrice)}</span>
         </div>
+
         <button
           type="button"
-          onClick={() =>
+          onClick={() => {
             addItem({
-              key: `${item.id}-${price.label}`,
+              key: `${item.id}-${price.label}-${[...activeToppings].sort().join("|")}`,
               name: item.name,
-              option: price.label,
-              price: price.value,
-            })
-          }
-          className="mt-auto flex h-11 w-full items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
+              option:
+                activeToppings.length > 0
+                  ? `${price.label} + ${activeToppings.join(", ")}`
+                  : price.label,
+              price: finalPrice,
+            });
+            setToppings([]);
+          }}
+          className="mt-auto flex h-11 w-full cursor-pointer items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
         >
           Add to Order
         </button>
@@ -110,13 +184,14 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
 
   return (
     <article
+      id={`deal-${deal.id}`}
       className={`group relative flex flex-col overflow-hidden rounded-2xl bg-linear-to-br from-brand-red to-brand-red-deep p-6 shadow-lg ring-1 ring-brand-gold/40 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02] ${
         compact ? "" : "min-w-67.5"
       }`}
     >
       {src && (
         <div className="-mx-6 -mt-6 mb-5">
-          <FullImage src={src} alt={deal.title} />
+          <SmartImage src={src} alt={deal.title} className="h-48" />
         </div>
       )}
       <span className="inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-xs font-black uppercase tracking-wide text-accent-foreground">
@@ -140,7 +215,7 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
               price: deal.price,
             })
           }
-          className="rounded-lg bg-accent px-4 py-2 text-sm font-black text-accent-foreground transition-colors hover:bg-foreground"
+          className="cursor-pointer rounded-lg bg-accent px-4 py-2 text-sm font-black text-accent-foreground transition-colors hover:bg-foreground"
         >
           Add to Order
         </button>
@@ -172,6 +247,13 @@ export function MenuSection() {
   const { items: allItems, deals, loading, error } = useMenuData();
   const show = (c: MenuCategory) => active === "all" || active === c;
 
+  // Search se click par "All" tab khul jaye taake card maujood ho
+  useEffect(() => {
+    const h = () => setActive("all");
+    window.addEventListener("show-all-menu", h);
+    return () => window.removeEventListener("show-all-menu", h);
+  }, []);
+
   const byCategory = (c: MenuCategory) => allItems.filter((i) => i.category === c);
 
   const otherTabs = CATEGORIES.filter(
@@ -194,14 +276,13 @@ export function MenuSection() {
           </p>
         </div>
 
-        {/* Filter tabs */}
         <div className="no-scrollbar mt-10 flex gap-2 overflow-x-auto pb-1">
           {CATEGORIES.map((c) => (
             <button
               key={c.id}
               type="button"
               onClick={() => setActive(c.id)}
-              className={`shrink-0 rounded-full px-5 py-2.5 text-sm font-bold transition-colors ${
+              className={`shrink-0 cursor-pointer rounded-full px-5 py-2.5 text-sm font-bold transition-colors ${
                 active === c.id
                   ? "bg-primary text-primary-foreground shadow-[0_6px_18px_-6px_var(--brand-red)]"
                   : "border border-border text-foreground/80 hover:border-accent/60 hover:text-accent"
@@ -213,9 +294,8 @@ export function MenuSection() {
         </div>
 
         {loading && <p className="mt-10 text-muted-foreground">Loading menu...</p>}
-        {error && <p className="mt-10 text-accent">Menu load nahi hua. Dobara try karein.</p>}
+        {error && <p className="mt-10 text-accent">Failed to load the menu. Please try again.</p>}
 
-        {/* PIZZA */}
         {show("pizza") && (
           <>
             {PIZZA_GROUPS.map((g) => (
@@ -244,7 +324,6 @@ export function MenuSection() {
           </>
         )}
 
-        {/* MEALS, CHINA, BURGERS, ... */}
         {otherTabs.map(
           (c) =>
             show(c.id) && (

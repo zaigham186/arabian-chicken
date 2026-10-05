@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import type { Deal, MenuItem } from "./menu";
+import { DEALS, MENU_ITEMS, type Deal, type MenuItem } from "./menu";
 
 const API = import.meta.env["VITE_API_URL"] ?? "http://localhost:4000";
 
 type Data = { items: MenuItem[]; deals: Deal[] };
 let cache: Promise<Data> | null = null;
 
+async function getJson(path: string) {
+  const r = await fetch(`${API}${path}`);
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
 function load(): Promise<Data> {
   if (!cache) {
-    cache = Promise.all([
-      fetch(`${API}/api/items`).then((r) => r.json()),
-      fetch(`${API}/api/deals`).then((r) => r.json()),
-    ])
+    cache = Promise.all([getJson("/api/items"), getJson("/api/deals")])
       .then(([items, deals]) => ({
         items: (items as any[])
           .filter((x) => x.available !== false)
@@ -20,9 +23,10 @@ function load(): Promise<Data> {
           .filter((x) => x.available !== false)
           .map((x) => ({ ...x, id: x.slug }) as Deal),
       }))
-      .catch((e) => {
+      .catch(() => {
         cache = null;
-        throw e;
+        // Backup: purana local data
+        return { items: MENU_ITEMS, deals: DEALS };
       });
   }
   return cache;
@@ -31,14 +35,12 @@ function load(): Promise<Data> {
 export function useMenuData() {
   const [data, setData] = useState<Data>({ items: [], deals: [] });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
     load()
       .then(setData)
-      .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, []);
 
-  return { ...data, loading, error };
+  return { ...data, loading, error: false };
 }
