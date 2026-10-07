@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FOOD_IMAGES } from "@/data/images";
-import { formatRs, CONTACT, type MenuItem } from "@/data/menu";
+import { formatRs, type MenuItem } from "@/data/menu";
 import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
 const NEW_ARRIVAL_CATEGORIES = ["wings", "chicken", "soup"];
@@ -12,14 +12,17 @@ function OfferCard({ item }: { item: MenuItem }) {
   const src = item.imageUrl || FOOD_IMAGES[item.id] || FOOD_IMAGES[item.image];
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl">
-      <div className="relative h-52 overflow-hidden bg-black/5">
+    <article
+      id={`item-${item.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-black/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
+    >
+      <div className="relative h-52 overflow-hidden bg-charcoal-deep">
         {src ? (
           <img
             src={src}
             alt={item.name}
             loading="lazy"
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="grid h-full w-full place-items-center text-5xl">🍽️</div>
@@ -32,28 +35,30 @@ function OfferCard({ item }: { item: MenuItem }) {
       <div className="flex flex-1 flex-col p-6">
         <h3 className="font-display text-xl font-bold">{item.name}</h3>
 
-        <div className="mt-3 flex flex-wrap gap-2">
-          {item.prices.map((p, i) => (
-            <button
-              key={p.label}
-              type="button"
-              onClick={() => setSelected(i)}
-              className={`rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
-                i === selected
-                  ? "border-brand-red bg-brand-red text-primary-foreground"
-                  : "border-black/15 text-cream-foreground/80 hover:border-brand-red"
-              }`}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
+        {item.prices.length > 1 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {item.prices.map((p, i) => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => setSelected(i)}
+                className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
+                  i === selected
+                    ? "border-brand-red bg-brand-red text-primary-foreground"
+                    : "border-black/15 text-cream-foreground/80 hover:border-brand-red"
+                }`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+        )}
 
         <p className="mt-3 font-display text-2xl font-black text-brand-red">
           {formatRs(current.value)}
         </p>
 
-        <div className="mt-auto flex gap-3 pt-5">
+        <div className="mt-auto pt-5">
           <button
             type="button"
             onClick={() =>
@@ -64,20 +69,10 @@ function OfferCard({ item }: { item: MenuItem }) {
                 price: current.value,
               })
             }
-            className="flex h-11 flex-1 items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
+            className="flex h-11 w-full cursor-pointer items-center justify-center rounded-lg bg-primary font-bold text-primary-foreground transition-colors hover:bg-brand-red-deep"
           >
             Add to Order
           </button>
-          <a
-            href={CONTACT.whatsappLink}
-            target="_blank"
-            rel="noreferrer"
-            className="grid h-11 w-11 shrink-0 place-items-center rounded-lg border-2 border-accent font-bold text-accent-foreground transition-colors hover:bg-accent"
-            aria-label={`Order ${item.name} on WhatsApp`}
-            title="Order on WhatsApp"
-          >
-            🛒
-          </a>
         </div>
       </div>
     </article>

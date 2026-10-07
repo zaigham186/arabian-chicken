@@ -521,7 +521,10 @@ export const MENU_ITEMS: MenuItem[] = [
     name: "Full Chicken Broast",
     category: "chicken",
     image: "broast",
-    prices: [{ label: "Full Size Chicken", value: 1800 }],
+    prices: [
+      { label: "Full", value: 1800 },
+      { label: "Half", value: 950 },
+    ],
   },
   {
     id: "mix-soup",
@@ -666,11 +669,44 @@ export const CONTACT = {
     "https://maps.google.com/maps?q=Gulbahar%20No.2%20Peshawar&t=&z=15&ie=UTF8&iwloc=&output=embed",
 };
 export const PAYMENT = {
-  number: "03151997888",
-  accountName: "", // chahein to account holder ka naam likh dein, jaise "Arabian Chick"
   methods: ["Easypaisa", "JazzCash"],
+  accounts: [
+    { name: "Tariq Mehmood", number: "03151997888" },
+    { name: "Shahid Mehmood", number: "03459495524" },
+  ],
 };
 
 export function formatRs(value: number): string {
   return `Rs.${value.toLocaleString("en-PK")}`;
 }
+// Extra topping ka rate (har topping ka, size ke hisaab se)
+const TOPPING_BY_SIZE: Record<string, number> = {
+  S: 100,
+  M: 150,
+  L: 200,
+  XL: 300,
+  Small: 100,
+  Medium: 150,
+  Large: 200,
+  "Extra Large": 300,
+};
+
+// Size label se topping ka rate (R size ke liye null, yani topping nahi)
+export function toppingPriceFor(sizeLabel: string): number | null {
+  return TOPPING_BY_SIZE[sizeLabel] ?? TOPPING_BY_SIZE[sizeLabel.split(" ")[0] ?? ""] ?? null;
+}
+
+// Toppings ki list (restaurant ke mutabiq badal lein)
+export const TOPPING_OPTIONS = [
+  "Extra Cheese",
+  "Chicken Tikka",
+  "Fajita Chicken",
+  "Beef Sausage",
+  "Pepperoni",
+  "Mushrooms",
+  "Black Olives",
+  "Capsicum",
+  "Onion",
+  "Sweet Corn",
+  "Jalapeno",
+];

@@ -5,7 +5,10 @@ import mongoose from "mongoose";
 import { v2 as cloudinary } from "cloudinary";
 import { MENU_ITEMS, DEALS } from "../src/data/menu.ts";
 import { Item, Deal } from "./models.js";
-
+if (process.env.ALLOW_SEED !== "true") {
+  console.error("Seed blocked. Run with ALLOW_SEED=true only if you really want to RESET the database.");
+  process.exit(1);
+}
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
