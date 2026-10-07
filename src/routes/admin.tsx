@@ -64,7 +64,9 @@ function AdminPage() {
 
 /* ---------------- Login ---------------- */
 function Login({ onLogin }: { onLogin: (t: string) => void }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -75,7 +77,7 @@ function Login({ onLogin }: { onLogin: (t: string) => void }) {
       const r = await fetch(`${API}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       });
       const data = await r.json();
       if (!r.ok) throw new Error(data.error || "Login failed");
@@ -88,27 +90,78 @@ function Login({ onLogin }: { onLogin: (t: string) => void }) {
   };
 
   return (
-    <div className="grid min-h-screen place-items-center bg-background px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-charcoal-card p-8">
-        <h1 className="font-display text-2xl font-black text-foreground">Admin Login</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Arabian Chick, N</p>
+    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4">
+      <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-brand-red/20 blur-[120px]" />
+      <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-brand-gold/15 blur-[120px]" />
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          submit();
+        }}
+        className="relative w-full max-w-sm rounded-3xl border border-border bg-charcoal-card/90 p-8 shadow-2xl backdrop-blur"
+      >
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary text-2xl shadow-[0_8px_24px_-8px_var(--brand-red)]">
+          🔒
+        </div>
+        <h1 className="mt-4 text-center font-display text-2xl font-black text-foreground">
+          Admin Login
+        </h1>
+        <p className="mt-1 text-center text-sm text-muted-foreground">Arabian Chick, N</p>
+
+        <label className="mt-6 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          Username
+        </label>
         <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submit()}
-          className={`${input} mt-6`}
+          autoComplete="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter username"
+          className={`${input} mt-1.5`}
         />
-        {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
+
+        <label className="mt-4 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          Password
+        </label>
+        <div className="relative mt-1.5">
+          <input
+            type={show ? "text" : "password"}
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter password"
+            className={`${input} pr-11`}
+          />
+          <button
+            type="button"
+            onClick={() => setShow((v) => !v)}
+            aria-label={show ? "Hide password" : "Show password"}
+            className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 cursor-pointer place-items-center rounded-md text-foreground/60 hover:text-accent"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+              <circle cx="12" cy="12" r="3" />
+              {show && <path d="M3 3l18 18" />}
+            </svg>
+          </button>
+        </div>
+
+        {error && (
+          <p className="mt-4 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-400">{error}</p>
+        )}
+
         <button
-          onClick={submit}
+          type="submit"
           disabled={busy}
-          className={`${btn} mt-5 w-full bg-primary text-primary-foreground hover:bg-brand-red-deep`}
+          className={`${btn} mt-6 h-11 w-full cursor-pointer bg-primary text-primary-foreground shadow-[0_10px_26px_-8px_var(--brand-red)] hover:bg-brand-red-deep disabled:opacity-60`}
         >
           {busy ? "Please wait..." : "Login"}
         </button>
-      </div>
+
+        <a href="/" className="mt-4 block text-center text-xs font-semibold text-foreground/60 hover:text-accent">
+          ← Back to website
+        </a>
+      </form>
     </div>
   );
 }

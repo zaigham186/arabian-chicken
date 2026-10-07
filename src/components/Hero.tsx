@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import heroImg from "@/assets/hero.jpg";
-import { CONTACT } from "@/data/menu";
 
 const FLOATERS = [
   { emoji: "🍕", className: "right-[8%] top-[18%] text-7xl", depth: 60, delay: "0s" },
@@ -42,15 +41,14 @@ export function Hero() {
       <div
         className="absolute -inset-10 transition-transform duration-300 ease-out will-change-transform"
         style={{
-          transform:
-            "translate3d(calc(var(--mx) * -25px), calc(var(--my) * -25px), 0)",
+          transform: "translate3d(calc(var(--mx) * -25px), calc(var(--my) * -25px), 0)",
         }}
       >
-       <img
-  src={heroImg}
-  alt="Arabian Chick, N signature feast — wings, BBQ and pizza"
-  className="animate-kenburns h-full w-full object-cover object-center"
-/>
+        <img
+          src={heroImg}
+          alt="Arabian Chick, N signature feast — wings, BBQ and pizza"
+          className="animate-kenburns h-full w-full object-cover object-center"
+        />
       </div>
 
       {/* Overlays */}
@@ -84,24 +82,22 @@ export function Hero() {
       <div
         className="relative mx-auto w-full max-w-7xl px-4 pb-24 pt-36 transition-transform duration-300 ease-out sm:px-6 lg:px-8"
         style={{
-          transform:
-            "rotateY(calc(var(--mx) * 3deg)) rotateX(calc(var(--my) * -3deg))",
+          transform: "rotateY(calc(var(--mx) * 3deg)) rotateX(calc(var(--my) * -3deg))",
         }}
       >
         <span className="animate-rise animate-rise-1 inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-accent backdrop-blur-sm">
           🔥 Best Offer — New Arrival
         </span>
 
-        <h1 className="animate-rise animate-rise-2 mt-6 max-w-3xl font-display text-5xl font-black leading-[1.05] tracking-tight text-foreground text-balance [text-shadow:0_10px_40px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
+        <h1 className="animate-rise animate-rise-2 mt-6 max-w-3xl font-display text-4xl font-black leading-[1.05] tracking-tight text-foreground text-balance [text-shadow:0_10px_40px_rgba(0,0,0,0.6)] sm:text-5xl lg:text-5xl">
           Arabian Chick,{" "}
           <span className="bg-linear-to-r from-brand-red via-brand-gold to-brand-gold bg-clip-text text-transparent">
             N
           </span>
         </h1>
-
         <p className="animate-rise animate-rise-3 mt-5 max-w-xl text-lg font-medium text-foreground/85 sm:text-xl">
-          Fast Food &amp; Pizza Restaurant — Peshawar. Crispy wings, sizzling
-          BBQ and handcrafted pizzas, served hot &amp; fresh.
+          Fast Food &amp; Pizza Restaurant — Peshawar. Crispy wings, sizzling BBQ and handcrafted
+          pizzas, served hot &amp; fresh.
         </p>
 
         <div className="animate-rise animate-rise-4 mt-9 flex flex-wrap items-center gap-4">
@@ -112,12 +108,10 @@ export function Hero() {
             Explore Menu
           </a>
           <a
-            href={CONTACT.whatsappLink}
-            target="_blank"
-            rel="noreferrer"
+            href="#deals"
             className="inline-flex h-14 items-center rounded-xl border-2 border-accent px-8 font-display text-base font-bold text-accent backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-accent hover:text-accent-foreground"
           >
-            Order on WhatsApp
+            View Deals
           </a>
         </div>
 

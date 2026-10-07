@@ -127,13 +127,14 @@ app.use(
 );
 
 app.post("/api/admin/login", (req, res) => {
-  if (!safeEqual(req.body?.password ?? "", ADMIN_PASSWORD)) {
-    return res.status(401).json({ error: "Wrong password" });
+  const okUser = safeEqual(req.body?.username ?? "", process.env.ADMIN_USERNAME ?? "admin");
+  const okPass = safeEqual(req.body?.password ?? "", ADMIN_PASSWORD);
+  if (!okUser || !okPass) {
+    return res.status(401).json({ error: "Wrong username or password" });
   }
   const token = jwt.sign({ role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
   res.json({ token });
 });
-
 /* ---------- health (UptimeRobot / Render ke liye) ---------- */
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
