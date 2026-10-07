@@ -3,7 +3,6 @@ import { FOOD_IMAGES } from "@/data/images";
 import { formatRs, CONTACT, type MenuItem } from "@/data/menu";
 import { useMenuData } from "@/data/useMenuData";
 import { useCart } from "./cart";
-
 const NEW_ARRIVAL_CATEGORIES = ["wings", "chicken", "soup"];
 
 function OfferCard({ item }: { item: MenuItem }) {
