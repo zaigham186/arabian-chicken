@@ -14,8 +14,9 @@ const NAV_LINKS = [
 function CartIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M6 7h12l-1 13H7L6 7Z" />
-      <path d="M9 7a3 3 0 0 1 6 0" />
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="18" cy="20" r="1.5" />
+      <path d="M2 3h3l2.7 11.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 7H6" />
     </svg>
   );
 }
@@ -94,19 +95,19 @@ export function Navbar() {
             })}
           </div>
 
-          <SearchBox className="w-44 xl:w-56" />
+          <SearchBox className="w-36 xl:w-48" />
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setCartOpen(true)}
-              aria-label={`Open cart, ${count} items`}
-              title="Cart"
-              className="relative grid h-10 w-10 cursor-pointer place-items-center rounded-full border border-accent/50 text-accent transition-all hover:bg-accent hover:text-accent-foreground"
+              aria-label={`Add to Cart, ${count} items`}
+              className="relative inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border border-accent/50 px-4 text-[13px] font-semibold text-accent transition-all hover:bg-accent hover:text-accent-foreground"
             >
               <CartIcon />
+              <span>Add to Cart</span>
               {count > 0 && (
-                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-black text-primary-foreground ring-2 ring-charcoal-deep">
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-black text-primary-foreground">
                   {count}
                 </span>
               )}
@@ -115,10 +116,10 @@ export function Navbar() {
             <a
               href="/admin"
               aria-label="Admin"
-              title="Admin"
-              className="grid h-10 w-10 place-items-center rounded-full border border-border text-foreground/70 transition-colors hover:border-accent hover:text-accent"
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-4 text-[13px] font-semibold text-foreground/80 transition-colors hover:border-accent hover:text-accent"
             >
               <LockIcon />
+              <span>Admin</span>
             </a>
           </div>
         </nav>
@@ -171,7 +172,7 @@ export function Navbar() {
             className="mt-5 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-primary font-bold text-primary-foreground"
           >
             <CartIcon />
-            Cart {count > 0 && `(${count})`}
+            Add to Cart {count > 0 && `(${count})`}
           </button>
 
           <a
