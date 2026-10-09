@@ -11,22 +11,38 @@ async function runTests() {
     // 1. Health check
     const rHealth = await fetch(`${BASE}/api/health`);
     const dHealth = await rHealth.json();
-    log("GET /api/health", rHealth.status === 200 && dHealth.ok === true, `status ${rHealth.status}, db: ${dHealth.database}`);
+    log(
+      "GET /api/health",
+      rHealth.status === 200 && dHealth.ok === true,
+      `status ${rHealth.status}, db: ${dHealth.database}`,
+    );
 
     // 2. Legacy health check
     const rLegacyHealth = await fetch(`${BASE}/health`);
     const dLegacyHealth = await rLegacyHealth.json();
-    log("GET /health", rLegacyHealth.status === 200 && dLegacyHealth.ok === true, `status ${rLegacyHealth.status}`);
+    log(
+      "GET /health",
+      rLegacyHealth.status === 200 && dLegacyHealth.ok === true,
+      `status ${rLegacyHealth.status}`,
+    );
 
     // 3. GET /api/items
     const rItems = await fetch(`${BASE}/api/items`);
     const dItems = await rItems.json();
-    log("GET /api/items", rItems.status === 200 && Array.isArray(dItems), `status ${rItems.status}, items count: ${dItems.length}`);
+    log(
+      "GET /api/items",
+      rItems.status === 200 && Array.isArray(dItems),
+      `status ${rItems.status}, items count: ${dItems.length}`,
+    );
 
     // 4. GET /api/deals
     const rDeals = await fetch(`${BASE}/api/deals`);
     const dDeals = await rDeals.json();
-    log("GET /api/deals", rDeals.status === 200 && Array.isArray(dDeals), `status ${rDeals.status}, deals count: ${dDeals.length}`);
+    log(
+      "GET /api/deals",
+      rDeals.status === 200 && Array.isArray(dDeals),
+      `status ${rDeals.status}, deals count: ${dDeals.length}`,
+    );
 
     // 5. Admin login invalid credentials
     const rBadLogin = await fetch(`${BASE}/api/admin/login`, {
@@ -35,7 +51,11 @@ async function runTests() {
       body: JSON.stringify({ password: "wrong-password" }),
     });
     const dBadLogin = await rBadLogin.json();
-    log("POST /api/admin/login (invalid)", rBadLogin.status === 401 && dBadLogin.error === "Wrong password", `status ${rBadLogin.status}`);
+    log(
+      "POST /api/admin/login (invalid)",
+      rBadLogin.status === 401 && dBadLogin.error === "Wrong password",
+      `status ${rBadLogin.status}`,
+    );
 
     // 6. Admin login valid credentials
     const rGoodLogin = await fetch(`${BASE}/api/admin/login`, {
@@ -45,18 +65,34 @@ async function runTests() {
     });
     const dGoodLogin = await rGoodLogin.json();
     const token = dGoodLogin.token;
-    log("POST /api/admin/login (valid)", rGoodLogin.status === 200 && typeof token === "string", `status ${rGoodLogin.status}, token issued`);
+    log(
+      "POST /api/admin/login (valid)",
+      rGoodLogin.status === 200 && typeof token === "string",
+      `status ${rGoodLogin.status}, token issued`,
+    );
 
     // 7. Unauthorized protections
     const rUnauthItem = await fetch(`${BASE}/api/items`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: "Hacker Pizza", category: "pizza", prices: [{ label: "S", value: 100 }] }),
+      body: JSON.stringify({
+        name: "Hacker Pizza",
+        category: "pizza",
+        prices: [{ label: "S", value: 100 }],
+      }),
     });
-    log("POST /api/items (no token rejected)", rUnauthItem.status === 401, `status ${rUnauthItem.status}`);
+    log(
+      "POST /api/items (no token rejected)",
+      rUnauthItem.status === 401,
+      `status ${rUnauthItem.status}`,
+    );
 
     const rUnauthUpload = await fetch(`${BASE}/api/upload`, { method: "POST" });
-    log("POST /api/upload (no token rejected)", rUnauthUpload.status === 401, `status ${rUnauthUpload.status}`);
+    log(
+      "POST /api/upload (no token rejected)",
+      rUnauthUpload.status === 401,
+      `status ${rUnauthUpload.status}`,
+    );
 
     // 8. CRUD Item
     let createdItemId = null;
@@ -77,7 +113,11 @@ async function runTests() {
     });
     const dCreateItem = await rCreateItem.json();
     createdItemId = dCreateItem._id;
-    log("POST /api/items (create test item)", rCreateItem.status === 200 && createdItemId, `created ID ${createdItemId}`);
+    log(
+      "POST /api/items (create test item)",
+      rCreateItem.status === 200 && createdItemId,
+      `created ID ${createdItemId}`,
+    );
 
     // 9. Stock toggle on Item
     const rToggleItem = await fetch(`${BASE}/api/items/${createdItemId}`, {
@@ -89,7 +129,11 @@ async function runTests() {
       body: JSON.stringify({ available: false }),
     });
     const dToggleItem = await rToggleItem.json();
-    log("PUT /api/items/:id (stock toggle)", rToggleItem.status === 200 && dToggleItem.available === false, `available set to false`);
+    log(
+      "PUT /api/items/:id (stock toggle)",
+      rToggleItem.status === 200 && dToggleItem.available === false,
+      `available set to false`,
+    );
 
     // 10. Delete test item
     const rDeleteItem = await fetch(`${BASE}/api/items/${createdItemId}`, {
@@ -97,7 +141,11 @@ async function runTests() {
       headers: { Authorization: `Bearer ${token}` },
     });
     const dDeleteItem = await rDeleteItem.json();
-    log("DELETE /api/items/:id", rDeleteItem.status === 200 && dDeleteItem.ok === true, `status ${rDeleteItem.status}`);
+    log(
+      "DELETE /api/items/:id",
+      rDeleteItem.status === 200 && dDeleteItem.ok === true,
+      `status ${rDeleteItem.status}`,
+    );
 
     // 11. CRUD Deal
     let createdDealId = null;
@@ -118,7 +166,11 @@ async function runTests() {
     });
     const dCreateDeal = await rCreateDeal.json();
     createdDealId = dCreateDeal._id;
-    log("POST /api/deals (create test deal)", rCreateDeal.status === 200 && createdDealId, `created ID ${createdDealId}`);
+    log(
+      "POST /api/deals (create test deal)",
+      rCreateDeal.status === 200 && createdDealId,
+      `created ID ${createdDealId}`,
+    );
 
     // 12. Stock toggle on Deal
     const rToggleDeal = await fetch(`${BASE}/api/deals/${createdDealId}`, {
@@ -130,7 +182,11 @@ async function runTests() {
       body: JSON.stringify({ available: false }),
     });
     const dToggleDeal = await rToggleDeal.json();
-    log("PUT /api/deals/:id (stock toggle)", rToggleDeal.status === 200 && dToggleDeal.available === false, `available set to false`);
+    log(
+      "PUT /api/deals/:id (stock toggle)",
+      rToggleDeal.status === 200 && dToggleDeal.available === false,
+      `available set to false`,
+    );
 
     // 13. Delete test deal
     const rDeleteDeal = await fetch(`${BASE}/api/deals/${createdDealId}`, {
@@ -138,7 +194,11 @@ async function runTests() {
       headers: { Authorization: `Bearer ${token}` },
     });
     const dDeleteDeal = await rDeleteDeal.json();
-    log("DELETE /api/deals/:id", rDeleteDeal.status === 200 && dDeleteDeal.ok === true, `status ${rDeleteDeal.status}`);
+    log(
+      "DELETE /api/deals/:id",
+      rDeleteDeal.status === 200 && dDeleteDeal.ok === true,
+      `status ${rDeleteDeal.status}`,
+    );
 
     // 14. Upload invalid MIME test
     const textFormData = new FormData();
@@ -148,10 +208,15 @@ async function runTests() {
       headers: { Authorization: `Bearer ${token}` },
       body: textFormData,
     });
-    log("POST /api/upload (invalid MIME rejected)", rBadUpload.status === 400, `status ${rBadUpload.status}`);
+    log(
+      "POST /api/upload (invalid MIME rejected)",
+      rBadUpload.status === 400,
+      `status ${rBadUpload.status}`,
+    );
 
     // 15. Upload valid small image test (1x1 transparent PNG)
-    const pngBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+    const pngBase64 =
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
     const pngBuffer = Buffer.from(pngBase64, "base64");
     const imgFormData = new FormData();
     imgFormData.append("image", new Blob([pngBuffer], { type: "image/png" }), "test.png");
@@ -161,7 +226,11 @@ async function runTests() {
       body: imgFormData,
     });
     const dGoodUpload = await rGoodUpload.json();
-    log("POST /api/upload (valid PNG to Cloudinary)", rGoodUpload.status === 200 && typeof dGoodUpload.url === "string", `url: ${dGoodUpload.url}`);
+    log(
+      "POST /api/upload (valid PNG to Cloudinary)",
+      rGoodUpload.status === 200 && typeof dGoodUpload.url === "string",
+      `url: ${dGoodUpload.url}`,
+    );
 
     console.log("\n--- TEST SUMMARY ---");
     const passedCount = results.filter((r) => r.passed).length;

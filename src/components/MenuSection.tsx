@@ -151,7 +151,9 @@ function MenuItemCard({ item }: { item: MenuItem }) {
           <span className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
             Total
           </span>
-          <span className="font-display text-xl font-black text-accent">{formatRs(finalPrice)}</span>
+          <span className="font-display text-xl font-black text-accent">
+            {formatRs(finalPrice)}
+          </span>
         </div>
 
         <button

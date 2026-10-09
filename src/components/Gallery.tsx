@@ -1,4 +1,3 @@
-
 const GALLERY = [
   {
     image:
@@ -60,12 +59,8 @@ const GALLERY = [
 
 export function Gallery() {
   return (
-    <section
-      id="gallery"
-      className="bg-background py-20 sm:py-24 lg:py-28"
-    >
+    <section id="gallery" className="bg-background py-20 sm:py-24 lg:py-28">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-
         {/* Header */}
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-black uppercase tracking-[0.25em] text-accent">
@@ -77,14 +72,13 @@ export function Gallery() {
           </h2>
 
           <p className="mt-5 text-sm leading-7 text-muted-foreground sm:text-base">
-            Take a look at some of our favorite dishes, freshly prepared
-            with quality ingredients and served with love.
+            Take a look at some of our favorite dishes, freshly prepared with quality ingredients
+            and served with love.
           </p>
         </div>
 
         {/* Gallery */}
         <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
-
           {GALLERY.map((shot, index) => (
             <figure
               key={shot.name}
@@ -104,11 +98,7 @@ export function Gallery() {
                   h-full min-h-62.5 w-full object-cover
                   transition-all duration-700 ease-out
                   group-hover:scale-110
-                  ${
-                    index === 0
-                      ? "h-105 sm:h-130"
-                      : "h-65 sm:h-70"
-                  }
+                  ${index === 0 ? "h-105 sm:h-130" : "h-65 sm:h-70"}
                 `}
               />
 
@@ -175,19 +165,15 @@ export function Gallery() {
               </span>
             </figure>
           ))}
-
         </div>
 
         {/* Bottom text */}
         <div className="mt-10 text-center">
           <p className="text-sm text-muted-foreground">
             Fresh ingredients. Delicious flavors.{" "}
-            <span className="font-semibold text-foreground">
-              Made fresh every day.
-            </span>
+            <span className="font-semibold text-foreground">Made fresh every day.</span>
           </p>
         </div>
-
       </div>
     </section>
   );

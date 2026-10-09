@@ -3,8 +3,18 @@ import { useCart } from "./cart";
 import { PaymentInfo } from "./PaymentInfo";
 
 export function CartWidget() {
-  const { items, count, total, increment, decrement, removeItem, clear, whatsappUrl, open, setOpen } =
-    useCart();
+  const {
+    items,
+    count,
+    total,
+    increment,
+    decrement,
+    removeItem,
+    clear,
+    whatsappUrl,
+    open,
+    setOpen,
+  } = useCart();
 
   return (
     <>
@@ -49,7 +59,9 @@ export function CartWidget() {
             {items.length === 0 ? (
               <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
                 <span className="text-5xl">🍕</span>
-                <p className="font-display text-lg font-bold text-foreground">Your order is empty</p>
+                <p className="font-display text-lg font-bold text-foreground">
+                  Your order is empty
+                </p>
                 <p className="text-sm font-medium text-muted-foreground">
                   Add items from the menu, then send your order on WhatsApp.
                 </p>

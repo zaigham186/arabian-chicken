@@ -2,11 +2,12 @@
 
 > **Project:** Arabian Chick, N — Fast Food & Pizza Restaurant Web Platform  
 > **Purpose:** Exhaustive breakdown of component-to-component connections, data pipelines, event buses, state management, and end-to-end workflows.  
-> **Document Status:** Active & Production-Aligned  
+> **Document Status:** Active & Production-Aligned
 
 ---
 
 ## Table of Contents
+
 1. [Executive Interconnection Map](#1-executive-interconnection-map)
 2. [Global Architecture & Connection Graph](#2-global-architecture--connection-graph)
 3. [Frontend Interconnections & Wiring](#3-frontend-interconnections--wiring)
@@ -34,20 +35,20 @@
 
 Every subsystem in the **Arabian Chick, N** codebase is intentionally interconnected to create a seamless customer experience and frictionless operations:
 
-| Source Module | Interconnects With | Mechanism / Interface | Purpose & Data Exchanged |
-| :--- | :--- | :--- | :--- |
-| **`__root.tsx`** | `index.tsx` & `admin.tsx` | TanStack Router `<Outlet />` | Injects global CSS, Fonts, Meta Tags, and QueryClient |
-| **`index.tsx`** | All Section Components | React Component Tree | Wraps entire storefront inside `<CartProvider>` |
-| **`cart.tsx` (Provider)** | `Navbar`, `MenuSection`, `Deals`, `CartWidget` | React Context (`useCart()`) | Broadcasts cart items, subtotal, item counts, and drawer state |
-| **`useMenuData.ts`** | `MenuSection`, `Deals`, `SearchBox` | React Hook / Promise Cache | Provides live menu items & deals from API with offline fallback |
-| **`SearchBox.tsx`** | `useMenuData` & DOM Anchor Nodes | State Query + `document.getElementById` | Live item filtering; auto-scrolls view to matched food cards |
-| **`MenuSection.tsx`** | `cart.tsx` (`addItem`) | Event Callback | Sends customized items (size, toppings, price) to Cart |
-| **`Deals.tsx`** | `cart.tsx` (`addItem`) | Event Callback | Sends bundle packages (badge, title, price) to Cart |
-| **`CartWidget.tsx`** | WhatsApp Business Web API | Deep-link (`https://wa.me/...`) | Generates encoded order text + JazzCash/Easypaisa payment details |
-| **`admin.tsx`** | Express Backend (`/api/*`) | `fetch()` + JWT Bearer Auth | CRUD mutations on menu items and combo deals |
-| **`admin.tsx`** | Cloudinary via Express | `multipart/form-data` | Uploads food photos directly into Cloudinary CDN bucket |
-| **`server/index.js`** | MongoDB Atlas Cluster | Mongoose ODM (`Item`, `Deal`) | Reads & updates cloud database collections |
-| **`server/seed.js`** | `src/data/menu.ts` & Cloudinary | File System + Cloudinary SDK | Uploads local images & seeds MongoDB with default catalog |
+| Source Module             | Interconnects With                             | Mechanism / Interface                   | Purpose & Data Exchanged                                          |
+| :------------------------ | :--------------------------------------------- | :-------------------------------------- | :---------------------------------------------------------------- |
+| **`__root.tsx`**          | `index.tsx` & `admin.tsx`                      | TanStack Router `<Outlet />`            | Injects global CSS, Fonts, Meta Tags, and QueryClient             |
+| **`index.tsx`**           | All Section Components                         | React Component Tree                    | Wraps entire storefront inside `<CartProvider>`                   |
+| **`cart.tsx` (Provider)** | `Navbar`, `MenuSection`, `Deals`, `CartWidget` | React Context (`useCart()`)             | Broadcasts cart items, subtotal, item counts, and drawer state    |
+| **`useMenuData.ts`**      | `MenuSection`, `Deals`, `SearchBox`            | React Hook / Promise Cache              | Provides live menu items & deals from API with offline fallback   |
+| **`SearchBox.tsx`**       | `useMenuData` & DOM Anchor Nodes               | State Query + `document.getElementById` | Live item filtering; auto-scrolls view to matched food cards      |
+| **`MenuSection.tsx`**     | `cart.tsx` (`addItem`)                         | Event Callback                          | Sends customized items (size, toppings, price) to Cart            |
+| **`Deals.tsx`**           | `cart.tsx` (`addItem`)                         | Event Callback                          | Sends bundle packages (badge, title, price) to Cart               |
+| **`CartWidget.tsx`**      | WhatsApp Business Web API                      | Deep-link (`https://wa.me/...`)         | Generates encoded order text + JazzCash/Easypaisa payment details |
+| **`admin.tsx`**           | Express Backend (`/api/*`)                     | `fetch()` + JWT Bearer Auth             | CRUD mutations on menu items and combo deals                      |
+| **`admin.tsx`**           | Cloudinary via Express                         | `multipart/form-data`                   | Uploads food photos directly into Cloudinary CDN bucket           |
+| **`server/index.js`**     | MongoDB Atlas Cluster                          | Mongoose ODM (`Item`, `Deal`)           | Reads & updates cloud database collections                        |
+| **`server/seed.js`**      | `src/data/menu.ts` & Cloudinary                | File System + Cloudinary SDK            | Uploads local images & seeds MongoDB with default catalog         |
 
 ---
 
@@ -62,7 +63,7 @@ graph TD
         Storefront["src/routes/index.tsx"]
         CartState["CartProvider (src/components/cart.tsx)"]
         MenuHook["useMenuData() (src/data/useMenuData.ts)"]
-        
+
         Nav["Navbar.tsx"]
         Search["SearchBox.tsx"]
         HeroComp["Hero.tsx & BestOffer.tsx"]
@@ -197,12 +198,13 @@ stateDiagram-v2
 ```
 
 #### How Cart Context Connects Subsystems:
+
 1. **Deduplication by Unique Key:**
    When an item is added, a unique composite key is passed:
    - For pizzas with toppings: `key = "${item.id}-${price.label}-${activeToppings.sort().join(',')}"`
    - For standard items: `key = "${item.id}-${price.label}"`
    - For deals: `key = "deal-${deal.id}"`
-   If the exact combination already exists, `CartProvider` increments `qty` by 1 instead of duplicating the line.
+     If the exact combination already exists, `CartProvider` increments `qty` by 1 instead of duplicating the line.
 2. **Navbar Counter Synchronization:**
    The `Navbar` subscribes to `count`. Whenever any item is added from the menu or deals, the cart badge automatically pulses and updates in real time.
 3. **WhatsApp URL Construction:**
@@ -231,6 +233,7 @@ flowchart TD
 ```
 
 #### Key Interconnection Features:
+
 - **Singleton Promise Caching:** The initial network request is saved in a module-level `cache` variable. Even if `MenuSection`, `Deals`, and `SearchBox` mount at the same time, only **one single network fetch** is made.
 - **Fail-Safe Offline Operation:** If the Express backend is sleeping (e.g., Render free tier cold-starting) or offline, the promise catch block automatically serves the static menu dataset bundled in [src/data/menu.ts](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/data/menu.ts). The user never sees a broken page.
 
@@ -520,19 +523,23 @@ flowchart TD
 ## 6. Data Payloads & Contracts Across Interconnected Nodes
 
 ### 1. Cart Item Schema (`CartItem`)
+
 Transferred between `MenuItemCard` / `DealCard` -> `CartProvider` -> `CartWidget`:
+
 ```typescript
 interface CartItem {
-  key: string;       // Unique composite identifier (prevents duplicate collisions)
-  name: string;      // e.g., "Chicken Fajita Pizza" or "Student Deal 1"
-  option: string;    // e.g., "M 10in (+Extra Cheese)" or "Regular"
-  price: number;     // Single unit price in PKR (including calculated toppings)
-  qty: number;       // Quantity selected by the customer
+  key: string; // Unique composite identifier (prevents duplicate collisions)
+  name: string; // e.g., "Chicken Fajita Pizza" or "Student Deal 1"
+  option: string; // e.g., "M 10in (+Extra Cheese)" or "Regular"
+  price: number; // Single unit price in PKR (including calculated toppings)
+  qty: number; // Quantity selected by the customer
 }
 ```
 
 ### 2. WhatsApp Order Message String
+
 Constructed in `CartProvider` and sent to `https://wa.me/923348457676`:
+
 ```text
 Assalam-o-Alaikum! I would like to order:
 
@@ -546,6 +553,7 @@ If I have paid online, I am sending the screenshot in this chat.
 ```
 
 ### 3. API Item Schema (Express -> MongoDB)
+
 ```json
 {
   "_id": "67a1b2c3d4e5f6a7b8c9d0e1",
@@ -575,13 +583,70 @@ If I have paid online, I am sending the screenshot in this chat.
 
 The system is designed with multiple fail-safe mechanisms so that customer-facing functionality remains operational even if third-party services fail:
 
-| Potential Failure Point | Interconnected Fallback Strategy | User Impact |
-| :--- | :--- | :--- |
-| **Backend API Downtime** | `useMenuData()` catches the fetch exception and loads `src/data/menu.ts` static constants | Zero downtime. Customers can browse and order normally. |
-| **Image CDN 404 / Network Drop** | `SmartImage` detects `onError` and displays an emoji fallback (`🍽️` or `🍕`) | Layout never breaks; missing images show friendly icons. |
-| **Catastrophic SSR Server Error** | `src/server.ts` & `src/start.ts` intercept uncaught exceptions and render a clean static HTML error page | Prevents raw JSON dumps or server stack traces from leaking. |
-| **Admin Route Brute-Force Attack** | `express-rate-limit` blocks IPs exceeding 10 attempts per 15 minutes | Protects admin credentials and server resources. |
-| **Timing Attacks on Admin Password** | `crypto.timingSafeEqual` hashes inputs before comparing in constant time | Immune to statistical timing analysis attacks. |
+| Potential Failure Point              | Interconnected Fallback Strategy                                                                         | User Impact                                                  |
+| :----------------------------------- | :------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------- |
+| **Backend API Downtime**             | `useMenuData()` catches the fetch exception and loads `src/data/menu.ts` static constants                | Zero downtime. Customers can browse and order normally.      |
+| **Image CDN 404 / Network Drop**     | `SmartImage` detects `onError` and displays an emoji fallback (`🍽️` or `🍕`)                             | Layout never breaks; missing images show friendly icons.     |
+| **Catastrophic SSR Server Error**    | `src/server.ts` & `src/start.ts` intercept uncaught exceptions and render a clean static HTML error page | Prevents raw JSON dumps or server stack traces from leaking. |
+| **Admin Route Brute-Force Attack**   | `express-rate-limit` blocks IPs exceeding 10 attempts per 15 minutes                                     | Protects admin credentials and server resources.             |
+| **Timing Attacks on Admin Password** | `crypto.timingSafeEqual` hashes inputs before comparing in constant time                                 | Immune to statistical timing analysis attacks.               |
 
 ---
-*Created for **Arabian Chick, N** — Peshawar, Pakistan.*
+
+## 8. Full-Stack Next.js Migration Status (Phases 1 — 6 Completed)
+
+The website has been migrated to a full-stack **Next.js App Router** architecture on branch `feat/nextjs-migration`:
+
+1. **Frontend Architecture (`app/page.tsx`, `app/admin/page.tsx`):**
+   - Clean Next.js App Router with React 19, TypeScript, and Tailwind CSS v4.
+   - All interactive components (Navbar, Hero, BestOffer, MenuSection, Deals, DeliveryBanner, CartDrawer, etc.) fully operational.
+
+2. **Native API Handlers (`app/api/`):**
+   - `GET /api/health` & `GET /health`: Database connection status and health ping.
+   - `GET /api/items`: Public catalogue of menu items, sorted by `order ASC, createdAt ASC`.
+   - `POST /api/items`: Admin protected item creation with input whitelist and auto-slug generation.
+   - `PUT /api/items/[id]`: Admin protected update supporting fast single-field stock toggle (`{ available: boolean }`) and full updates.
+   - `DELETE /api/items/[id]`: Admin protected item deletion by Mongo `_id`.
+   - `GET /api/deals`: Public catalogue of combo/family deals.
+   - `POST /api/deals`: Admin protected deal creation with input whitelist and auto-slug generation.
+   - `PUT /api/deals/[id]`: Admin protected update supporting fast single-field stock toggle and full updates.
+   - `DELETE /api/deals/[id]`: Admin protected deal deletion by Mongo `_id`.
+   - `POST /api/admin/login`: Rate-limited, timing-safe authentication issuing 7-day JWT and setting `HttpOnly`, `SameSite=Lax`, `Secure` cookie.
+   - `GET /api/admin/verify`: Server-side session verification endpoint validating token and cookie.
+   - `POST /api/admin/logout`: Session termination endpoint clearing the `HttpOnly` session cookie.
+   - `POST /api/upload`: Admin protected multipart upload (5MB max, MIME whitelist, streaming to Cloudinary `arabian-chick`).
+
+3. **Security & Session Verification:**
+   - Dual-token support (Bearer header + `HttpOnly` cookie).
+   - CSRF protection validating `Origin`/`Referer` against `Host` on cookie-authenticated mutating requests.
+   - Strict admin role assertion (`decoded.role === "admin"`).
+   - Memory-leak protected rate limiter.
+   - Zero server secrets leaked to client-side bundles.
+   - Production security headers configured in `next.config.mjs` (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy`, `Permissions-Policy`).
+
+4. **Cloudinary Media Pipeline & Image Optimization:**
+   - Server-side streaming direct to Cloudinary `arabian-chick` folder.
+   - Deep binary magic-byte validation (`isValidImageBuffer`) blocking spoofed polyglots and executable files.
+   - Secure server-only environment variable access for credentials (`CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`).
+   - `next.config.mjs` allows `res.cloudinary.com` remote patterns with full image optimization enabled.
+   - Form state isolation preventing image loss during edit workflows.
+   - Fallback rendering via `FOOD_IMAGES` and emoji icons (`🍽️`, `🍕`).
+
+5. **Automated Verification Suites (135 / 135 Passed):**
+   - **Phase 1-5 Comprehensive Suite (`test-all.mjs`):** 109 / 109 passing:
+     - Phase 3 API handlers: 16/16
+     - End-to-End Storefront & SSR: 28/28
+     - Phase 4 Security & Admin: 40/40
+     - Phase 5 Cloudinary & Image Management: 25/25
+   - **Phase 6 Production Runtime Simulation (`test-production-sim.mjs`):** 26 / 26 passing:
+     - Verified under actual production server (`next start -p 3000`)
+     - Homepage & Admin SSR render with security headers
+     - Real-time staging MongoDB CRUD, stock toggle & cleanup
+     - Cloudinary upload & CDN image delivery
+     - Complete logout / session revocation & client bundle secret-free audit
+
+
+
+---
+
+_Created for **Arabian Chick, N** — Peshawar, Pakistan._

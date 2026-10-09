@@ -18,7 +18,10 @@ const menuFiles = import.meta.glob("../assets/menu/*.{jpg,jpeg,png,webp,avif}", 
 
 const MENU_IMAGES: Record<string, string> = Object.fromEntries(
   Object.entries(menuFiles).map(([path, url]) => [
-    path.split("/").pop()!.replace(/\.[^.]+$/, ""),
+    path
+      .split("/")
+      .pop()!
+      .replace(/\.[^.]+$/, ""),
     url,
   ]),
 );
@@ -38,4 +41,4 @@ export const FOOD_IMAGES: Record<string, string> = {
   soup: toUrl(soupImg),
   fishChips: toUrl(fishChipsImg),
   ...MENU_IMAGES,
-};
+};

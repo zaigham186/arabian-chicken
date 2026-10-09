@@ -43,21 +43,64 @@ export default function AdminPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setToken(localStorage.getItem("admin_token"));
-    setReady(true);
+    async function verifySession() {
+      const stored = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
+      try {
+        const res = await fetch(`${API}/api/admin/verify`, {
+          credentials: "include",
+          headers: stored ? { Authorization: `Bearer ${stored}` } : {},
+        });
+        if (res.ok) {
+          const data = await res.json().catch(() => ({}));
+          if (data.authenticated) {
+            setToken(stored || "cookie_session");
+            setReady(true);
+            return;
+          }
+        }
+      } catch {
+        // network or server error
+      }
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("admin_token");
+      }
+      setToken(null);
+      setReady(true);
+    }
+
+    verifySession();
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("admin_token");
+  const logout = async () => {
+    try {
+      await fetch(`${API}/api/admin/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch {
+      // ignore
+    }
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("admin_token");
+    }
     setToken(null);
   };
 
-  if (!ready) return null;
+  if (!ready) {
+    return (
+      <div className="grid min-h-screen place-items-center bg-background px-4">
+        <p className="text-sm font-semibold text-muted-foreground">Checking authorization...</p>
+      </div>
+    );
+  }
+
   if (!token)
     return (
       <Login
         onLogin={(t) => {
-          localStorage.setItem("admin_token", t);
+          if (typeof window !== "undefined") {
+            localStorage.setItem("admin_token", t);
+          }
           setToken(t);
         }}
       />
@@ -72,15 +115,20 @@ function Login({ onLogin }: { onLogin: (t: string) => void }) {
   const [busy, setBusy] = useState(false);
 
   const submit = async () => {
+    if (!password.trim()) {
+      setError("Password is required");
+      return;
+    }
     setBusy(true);
     setError("");
     try {
       const r = await fetch(`${API}/api/admin/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ password }),
       });
-      const data = await r.json();
+      const data = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(data.error || "Login failed");
       onLogin(data.token);
     } catch (e: any) {
@@ -102,12 +150,13 @@ function Login({ onLogin }: { onLogin: (t: string) => void }) {
           onChange={(e) => setPassword(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           className={`${input} mt-6`}
+          disabled={busy}
         />
         {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
         <button
           onClick={submit}
           disabled={busy}
-          className={`${btn} mt-5 w-full bg-primary text-primary-foreground hover:bg-brand-red-deep`}
+          className={`${btn} mt-5 w-full bg-primary text-primary-foreground hover:bg-brand-red-deep disabled:opacity-50`}
         >
           {busy ? "Please wait..." : "Login"}
         </button>
@@ -129,20 +178,25 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
 
   const api = useCallback(
     async (path: string, method = "GET", body?: unknown) => {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+      };
+      if (token && token !== "cookie_session") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
       const r = await fetch(`${API}${path}`, {
         method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
+        credentials: "include",
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       });
       if (r.status === 401) {
         onLogout();
         throw new Error("Session expired, dobara login karein");
       }
-      if (!r.ok) throw new Error("Request failed");
-      return r.json();
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(data.error || "Request failed");
+      return data;
     },
     [token, onLogout],
   );
@@ -405,17 +459,32 @@ function Editor({
     );
 
   const upload = async (file: File) => {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      setError("File size exceeds 5MB limit");
+      return;
+    }
+    if (!/^image\/(jpeg|png|webp|avif|gif)$/i.test(file.type)) {
+      setError("Please choose a valid image (jpg, png, webp, avif)");
+      return;
+    }
+
     setUploading(true);
     setError("");
     try {
       const fd = new FormData();
       fd.append("image", file);
+      const headers: Record<string, string> = {};
+      if (token && token !== "cookie_session") {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
       const r = await fetch(`${API}/api/upload`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
+        credentials: "include",
         body: fd,
       });
-      const data = await r.json();
+      const data = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(data.error || "Upload failed");
       set("imageUrl", data.url);
     } catch (e: any) {

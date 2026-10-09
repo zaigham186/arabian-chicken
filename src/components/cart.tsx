@@ -47,9 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const decrement = (key: string) =>
     setItems((prev) =>
-      prev
-        .map((i) => (i.key === key ? { ...i, qty: i.qty - 1 } : i))
-        .filter((i) => i.qty > 0),
+      prev.map((i) => (i.key === key ? { ...i, qty: i.qty - 1 } : i)).filter((i) => i.qty > 0),
     );
 
   const removeItem = (key: string) => setItems((prev) => prev.filter((i) => i.key !== key));

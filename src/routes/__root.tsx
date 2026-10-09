@@ -83,7 +83,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Arabian Chick, N is Peshawar's go-to spot for crispy wings, sizzling BBQ and handcrafted pizzas. Student deals, home delivery — order on WhatsApp.",
       },
-      { property: "og:title", content: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar" },
+      {
+        property: "og:title",
+        content: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar",
+      },
       {
         property: "og:description",
         content:
@@ -105,7 +108,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap",
       },
     ],
-
   }),
   shellComponent: RootShell,
   component: RootComponent,

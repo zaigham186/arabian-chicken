@@ -37,7 +37,10 @@ export function Contact() {
 
           <ul className="mt-10 space-y-5">
             {INFO.map((row) => (
-              <li key={row.label} className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
+              <li
+                key={row.label}
+                className="flex gap-4 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5"
+              >
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-accent/20 text-2xl">
                   {row.icon}
                 </span>

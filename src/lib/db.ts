@@ -12,13 +12,11 @@ interface MongooseCache {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var mongooseConnection: MongooseCache | undefined;
 }
 
 const cached: MongooseCache =
-  global.mongooseConnection ||
-  (global.mongooseConnection = { conn: null, promise: null });
+  global.mongooseConnection || (global.mongooseConnection = { conn: null, promise: null });
 
 export async function connectDB(): Promise<typeof mongoose> {
   if (!MONGODB_URI) {
@@ -49,10 +47,7 @@ export async function connectDB(): Promise<typeof mongoose> {
 
 /* ---------------- Models with recompilation protection ---------------- */
 
-const priceSchema = new mongoose.Schema(
-  { label: String, value: Number },
-  { _id: false },
-);
+const priceSchema = new mongoose.Schema({ label: String, value: Number }, { _id: false });
 
 const itemSchema = new mongoose.Schema(
   {
@@ -86,9 +81,7 @@ const dealSchema = new mongoose.Schema(
 );
 
 export const Item: mongoose.Model<any> =
-  (mongoose.models["Item"] as mongoose.Model<any>) ||
-  mongoose.model("Item", itemSchema);
+  (mongoose.models["Item"] as mongoose.Model<any>) || mongoose.model("Item", itemSchema);
 
 export const Deal: mongoose.Model<any> =
-  (mongoose.models["Deal"] as mongoose.Model<any>) ||
-  mongoose.model("Deal", dealSchema);
+  (mongoose.models["Deal"] as mongoose.Model<any>) || mongoose.model("Deal", dealSchema);

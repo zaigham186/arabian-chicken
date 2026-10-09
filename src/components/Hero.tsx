@@ -42,8 +42,7 @@ export function Hero() {
       <div
         className="absolute -inset-10 transition-transform duration-300 ease-out will-change-transform"
         style={{
-          transform:
-            "translate3d(calc(var(--mx) * -25px), calc(var(--my) * -25px), 0)",
+          transform: "translate3d(calc(var(--mx) * -25px), calc(var(--my) * -25px), 0)",
         }}
       >
         <img
@@ -52,9 +51,9 @@ export function Hero() {
               ? (heroImg as any).src
               : heroImg
           }
-  alt="Arabian Chick, N signature feast — wings, BBQ and pizza"
-  className="animate-kenburns h-full w-full object-cover object-center"
-/>
+          alt="Arabian Chick, N signature feast — wings, BBQ and pizza"
+          className="animate-kenburns h-full w-full object-cover object-center"
+        />
       </div>
 
       {/* Overlays */}
@@ -88,8 +87,7 @@ export function Hero() {
       <div
         className="relative mx-auto w-full max-w-7xl px-4 pb-24 pt-36 transition-transform duration-300 ease-out sm:px-6 lg:px-8"
         style={{
-          transform:
-            "rotateY(calc(var(--mx) * 3deg)) rotateX(calc(var(--my) * -3deg))",
+          transform: "rotateY(calc(var(--mx) * 3deg)) rotateX(calc(var(--my) * -3deg))",
         }}
       >
         <span className="animate-rise animate-rise-1 inline-flex items-center gap-2 rounded-full border border-accent/50 bg-accent/10 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-accent backdrop-blur-sm">
@@ -104,8 +102,8 @@ export function Hero() {
         </h1>
 
         <p className="animate-rise animate-rise-3 mt-5 max-w-xl text-lg font-medium text-foreground/85 sm:text-xl">
-          Fast Food &amp; Pizza Restaurant — Peshawar. Crispy wings, sizzling
-          BBQ and handcrafted pizzas, served hot &amp; fresh.
+          Fast Food &amp; Pizza Restaurant — Peshawar. Crispy wings, sizzling BBQ and handcrafted
+          pizzas, served hot &amp; fresh.
         </p>
 
         <div className="animate-rise animate-rise-4 mt-9 flex flex-wrap items-center gap-4">

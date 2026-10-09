@@ -17,13 +17,7 @@ function goTo(targetId: string) {
   }, 200);
 }
 
-export function SearchBox({
-  className = "",
-  onDone,
-}: {
-  className?: string;
-  onDone?: () => void;
-}) {
+export function SearchBox({ className = "", onDone }: { className?: string; onDone?: () => void }) {
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -39,33 +33,33 @@ export function SearchBox({
 
   const term = q.trim().toLowerCase();
 
-const results = useMemo(() => {
-  if (!term) return { items: [], deals: [] };
+  const results = useMemo(() => {
+    if (!term) return { items: [], deals: [] };
 
-  // 0 = naam shuru hi isse hota hai, 1 = naam mein hai, 2 = description/category mein hai
-  const rank = (name: string, rest: string) => {
-    const n = name.toLowerCase();
-    if (n.startsWith(term)) return 0;
-    if (n.includes(term)) return 1;
-    if (rest.toLowerCase().includes(term)) return 2;
-    return 3;
-  };
+    // 0 = naam shuru hi isse hota hai, 1 = naam mein hai, 2 = description/category mein hai
+    const rank = (name: string, rest: string) => {
+      const n = name.toLowerCase();
+      if (n.startsWith(term)) return 0;
+      if (n.includes(term)) return 1;
+      if (rest.toLowerCase().includes(term)) return 2;
+      return 3;
+    };
 
-  return {
-    items: items
-      .map((i) => ({ i, r: rank(i.name, `${i.description ?? ""} ${i.category}`) }))
-      .filter((x) => x.r < 3)
-      .sort((a, b) => a.r - b.r)
-      .slice(0, 8)
-      .map((x) => x.i),
-    deals: deals
-      .map((d) => ({ d, r: rank(d.title, `${d.contents} ${d.badge ?? ""}`) }))
-      .filter((x) => x.r < 3)
-      .sort((a, b) => a.r - b.r)
-      .slice(0, 4)
-      .map((x) => x.d),
-  };
-}, [term, items, deals]);
+    return {
+      items: items
+        .map((i) => ({ i, r: rank(i.name, `${i.description ?? ""} ${i.category}`) }))
+        .filter((x) => x.r < 3)
+        .sort((a, b) => a.r - b.r)
+        .slice(0, 8)
+        .map((x) => x.i),
+      deals: deals
+        .map((d) => ({ d, r: rank(d.title, `${d.contents} ${d.badge ?? ""}`) }))
+        .filter((x) => x.r < 3)
+        .sort((a, b) => a.r - b.r)
+        .slice(0, 4)
+        .map((x) => x.d),
+    };
+  }, [term, items, deals]);
 
   const empty = term && results.items.length === 0 && results.deals.length === 0;
 
@@ -154,7 +148,11 @@ const results = useMemo(() => {
               className="flex w-full cursor-pointer items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-charcoal-card"
             >
               {d.imageUrl ? (
-                <img src={d.imageUrl} alt="" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+                <img
+                  src={d.imageUrl}
+                  alt=""
+                  className="h-12 w-12 shrink-0 rounded-lg object-cover"
+                />
               ) : (
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-charcoal-card">
                   🎁

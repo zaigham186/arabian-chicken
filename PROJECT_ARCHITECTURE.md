@@ -4,11 +4,12 @@
 > **Location:** Gulbahar No. 2, Peshawar, Khyber Pakhtunkhwa, Pakistan  
 > **Live Production Storefront:** [arabian-chicken.lovable.app](https://arabian-chicken.lovable.app)  
 > **Document Version:** 1.0.0  
-> **Status:** Production-Ready & Deployed  
+> **Status:** Production-Ready & Deployed
 
 ---
 
 ## Table of Contents
+
 1. [Executive Summary & System Goals](#1-executive-summary--system-goals)
 2. [High-Level System Architecture](#2-high-level-system-architecture)
 3. [Technology Stack & Dependency Matrix](#3-technology-stack--dependency-matrix)
@@ -40,6 +41,7 @@
 **Arabian Chick, N** is a full-stack, enterprise-grade restaurant web presence and order management solution engineered specifically for high-speed online food ordering, brand discovery, and menu administration.
 
 ### Core Objectives:
+
 1. **Frictionless Consumer Ordering:** Direct serverless checkout via WhatsApp deep-links with pre-computed item variants, dynamic pizza toppings, localized pricing (PKR), and integrated payment instructions (Easypaisa, JazzCash, Cash on Delivery).
 2. **Dynamic Menu Management:** Full administrative CMS enabling restaurant operators to upload food photos to Cloudinary, modify prices, add food items or deals, reorder offerings, and toggle real-time item availability (Sold Out vs. In Stock).
 3. **Resilience & High Availability:** Hybrid data layer supporting offline fallback to local static data (`menu.ts`) if the remote MongoDB/Express API experiences cold boots or downtime.
@@ -50,6 +52,7 @@
 ## 2. High-Level System Architecture
 
 The solution adopts a decoupled client-server architecture:
+
 - **Client/SSR Edge:** TanStack Start & TanStack Router running React 19 on Vite, producing Server-Side Rendered HTML and client-side hydrated single-page navigation.
 - **API Engine:** Node.js Express 5 microservice managing CRUD operations, token validation, rate-limiting, and media uploads.
 - **Persistence & Media Layer:** MongoDB Atlas for document storage and Cloudinary for media transformation and global asset delivery.
@@ -107,21 +110,21 @@ flowchart TB
 
 ## 3. Technology Stack & Dependency Matrix
 
-| Layer | Technology | Version | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Runtime & Bundler** | Vite | `8.1.5` | Next-generation ESM development & build server |
-| **Frontend Framework** | React | `19.2.0` | Declarative UI rendering & state management |
-| **Routing & SSR** | `@tanstack/react-start` & `@tanstack/react-router` | `1.168.32` / `1.170.18` | Type-safe file-based routing and SSR execution |
-| **Data Fetching** | `@tanstack/react-query` | `5.101.1` | Client-side query caching and synchronization |
-| **Styling Engine** | Tailwind CSS v4 & `@tailwindcss/vite` | `4.2.1` | OKLCH modern CSS tokens and atomic utilities |
-| **UI Components** | Radix UI Primitives | Latest | Accessible unstyled headless components (Dialog, Sheet, Accordion, etc.) |
-| **Icons & Typography** | Lucide React / Poppins & Inter | `0.575.0` | Vector icons and Google web typography |
-| **Backend Runtime** | Node.js (ES Modules) | `v20+` | Server execution environment |
-| **Server Framework** | Express | `5.2.1` | High-throughput HTTP API engine |
-| **Database ODM** | Mongoose | `9.10.3` | Schema definition and MongoDB communication |
-| **Security Suite** | Helmet / express-rate-limit | `8.3.0` / `8.7.0` | HTTP headers hardening and brute-force protection |
-| **Authentication** | jsonwebtoken & crypto | `9.0.3` | JWT issuance, verification, and timing-safe equal comparison |
-| **Media Pipeline** | Cloudinary v2 & Multer | `2.11.0` / `2.4.0` | In-memory multipart handling and cloud asset CDN storage |
+| Layer                  | Technology                                         | Version                 | Purpose                                                                  |
+| :--------------------- | :------------------------------------------------- | :---------------------- | :----------------------------------------------------------------------- |
+| **Runtime & Bundler**  | Vite                                               | `8.1.5`                 | Next-generation ESM development & build server                           |
+| **Frontend Framework** | React                                              | `19.2.0`                | Declarative UI rendering & state management                              |
+| **Routing & SSR**      | `@tanstack/react-start` & `@tanstack/react-router` | `1.168.32` / `1.170.18` | Type-safe file-based routing and SSR execution                           |
+| **Data Fetching**      | `@tanstack/react-query`                            | `5.101.1`               | Client-side query caching and synchronization                            |
+| **Styling Engine**     | Tailwind CSS v4 & `@tailwindcss/vite`              | `4.2.1`                 | OKLCH modern CSS tokens and atomic utilities                             |
+| **UI Components**      | Radix UI Primitives                                | Latest                  | Accessible unstyled headless components (Dialog, Sheet, Accordion, etc.) |
+| **Icons & Typography** | Lucide React / Poppins & Inter                     | `0.575.0`               | Vector icons and Google web typography                                   |
+| **Backend Runtime**    | Node.js (ES Modules)                               | `v20+`                  | Server execution environment                                             |
+| **Server Framework**   | Express                                            | `5.2.1`                 | High-throughput HTTP API engine                                          |
+| **Database ODM**       | Mongoose                                           | `9.10.3`                | Schema definition and MongoDB communication                              |
+| **Security Suite**     | Helmet / express-rate-limit                        | `8.3.0` / `8.7.0`       | HTTP headers hardening and brute-force protection                        |
+| **Authentication**     | jsonwebtoken & crypto                              | `9.0.3`                 | JWT issuance, verification, and timing-safe equal comparison             |
+| **Media Pipeline**     | Cloudinary v2 & Multer                             | `2.11.0` / `2.4.0`      | In-memory multipart handling and cloud asset CDN storage                 |
 
 ---
 
@@ -144,7 +147,7 @@ src/routes/
 
 - **Root Route (`__root.tsx`):**
   - Defines the global `<head>` (Viewport, Charset, OG metadata, Favicon).
-  - Preconnects and fetches Google Fonts: *Poppins* (600, 700, 800, 900) and *Inter* (400, 500, 600, 700).
+  - Preconnects and fetches Google Fonts: _Poppins_ (600, 700, 800, 900) and _Inter_ (400, 500, 600, 700).
   - Embeds `<Outlet />` inside `<QueryClientProvider>`.
   - Implements custom fallback error boundaries (`ErrorComponent` and `NotFoundComponent`).
 - **Home Route (`index.tsx`):**
@@ -158,6 +161,7 @@ src/routes/
 ### Design System & Theme Tokens
 
 Located in [src/styles.css](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/styles.css) and driven by Tailwind CSS v4 `@theme inline`:
+
 - **Palette (OKLCH Standard):**
   - `--brand-red`: `oklch(0.55 0.24 28)` — Signature brand crimson.
   - `--brand-red-deep`: `oklch(0.44 0.21 28)` — Hover and gradient termination.
@@ -199,6 +203,7 @@ src/components/
 ### Express v5 Server Pipeline
 
 Implemented in [server/index.js](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/server/index.js):
+
 1. **Proxy Trust:** `app.set("trust proxy", 1)` enables accurate client IP identification behind Render / Cloudflare reverse proxies.
 2. **Security Headers:** Initialized via `helmet()` to enforce strict CSP, HSTS, frameguard, and referrers.
 3. **CORS Control:** Configured with whitelist parsing via `CLIENT_ORIGIN` allowing cross-origin calls exclusively from allowed production and local origins.
@@ -222,40 +227,45 @@ Implemented in [server/index.js](file:///c:/Users/Hp/OneDrive/Desktop/All%20file
 Defined in [server/models.js](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/server/models.js):
 
 #### 1. Item Model (`Item`)
+
 Represents an individual food item (Burgers, Pizzas, Meals, Wings, etc.).
+
 ```typescript
 interface IItem {
-  slug: string;             // Unique slug identifier, e.g., 'fajita-sicilian-1712345678'
-  name: string;             // Item display name
-  category: string;         // 'pizza' | 'meals' | 'burgers' | 'fried-chicken' | etc.
-  group?: string;           // Optional sub-group ('hot' | 'crust' | 'extras')
-  description?: string;     // Ingredients or preparation notes
-  tag?: string;             // Promotional tag ('Hot', 'Bestseller', 'New')
-  imageUrl?: string;        // Cloudinary CDN URL or local static asset path
-  prices: Array<{           // Multi-variant pricing model
-    label: string;          // e.g., 'Regular', 'Large', 'S 7in', 'Single'
-    value: number;          // Price in PKR (e.g., 450, 1250)
+  slug: string; // Unique slug identifier, e.g., 'fajita-sicilian-1712345678'
+  name: string; // Item display name
+  category: string; // 'pizza' | 'meals' | 'burgers' | 'fried-chicken' | etc.
+  group?: string; // Optional sub-group ('hot' | 'crust' | 'extras')
+  description?: string; // Ingredients or preparation notes
+  tag?: string; // Promotional tag ('Hot', 'Bestseller', 'New')
+  imageUrl?: string; // Cloudinary CDN URL or local static asset path
+  prices: Array<{
+    // Multi-variant pricing model
+    label: string; // e.g., 'Regular', 'Large', 'S 7in', 'Single'
+    value: number; // Price in PKR (e.g., 450, 1250)
   }>;
-  available: boolean;       // Real-time stock toggle (default: true)
-  order: number;            // Display sequencing weight (default: 0)
+  available: boolean; // Real-time stock toggle (default: true)
+  order: number; // Display sequencing weight (default: 0)
   createdAt: Date;
   updatedAt: Date;
 }
 ```
 
 #### 2. Deal Model (`Deal`)
+
 Represents bundled offers, combo deals, or family feasts.
+
 ```typescript
 interface IDeal {
-  slug: string;             // Unique slug identifier, e.g., 'student-deal-1-1712345678'
-  badge: string;            // Badge label, e.g., 'Student Deal 1', 'Family Deal 3'
-  title: string;            // Headline, e.g., '1 Zinger Burger + Fries + 345ml Drink'
-  contents: string;         // Detailed list of included items
-  price: number;            // Fixed combo price in PKR
-  group: string;            // 'deal' (pizza deals) | 'double' (double deals) | 'family' (family deals)
-  imageUrl?: string;        // Cloudinary CDN asset URL
-  available: boolean;       // Availability switch (default: true)
-  order: number;            // Display sorting order
+  slug: string; // Unique slug identifier, e.g., 'student-deal-1-1712345678'
+  badge: string; // Badge label, e.g., 'Student Deal 1', 'Family Deal 3'
+  title: string; // Headline, e.g., '1 Zinger Burger + Fries + 345ml Drink'
+  contents: string; // Detailed list of included items
+  price: number; // Fixed combo price in PKR
+  group: string; // 'deal' (pizza deals) | 'double' (double deals) | 'family' (family deals)
+  imageUrl?: string; // Cloudinary CDN asset URL
+  available: boolean; // Availability switch (default: true)
+  order: number; // Display sorting order
   createdAt: Date;
   updatedAt: Date;
 }
@@ -268,19 +278,19 @@ interface IDeal {
 
 ### Complete REST API Reference
 
-| Endpoint | Method | Auth | Description | Status Codes |
-| :--- | :--- | :--- | :--- | :--- |
-| `/health` | `GET` | Public | Ping endpoint for UptimeRobot / Render keep-alive | `200` |
-| `/api/items` | `GET` | Public | Retrieves all active menu items sorted by `order` | `200` |
-| `/api/deals` | `GET` | Public | Retrieves all active combo deals sorted by `order` | `200` |
-| `/api/admin/login` | `POST` | Public (Rate-Limited) | Authenticates admin using username/password; returns JWT | `200`, `401`, `429` |
-| `/api/items` | `POST` | Admin (`Bearer`) | Creates a new menu item | `200`, `400`, `401` |
-| `/api/items/:id` | `PUT` | Admin (`Bearer`) | Updates an existing item or toggles `available` | `200`, `400`, `401`, `404` |
-| `/api/items/:id` | `DELETE`| Admin (`Bearer`) | Removes a menu item | `200`, `401`, `404` |
-| `/api/deals` | `POST` | Admin (`Bearer`) | Creates a new combo deal | `200`, `400`, `401` |
-| `/api/deals/:id` | `PUT` | Admin (`Bearer`) | Updates deal parameters or toggles availability | `200`, `400`, `401`, `404` |
-| `/api/deals/:id` | `DELETE`| Admin (`Bearer`) | Deletes a deal | `200`, `401`, `404` |
-| `/api/upload` | `POST` | Admin (`Bearer`) | Multipart single image upload (`image`) to Cloudinary | `200`, `400`, `401`, `500` |
+| Endpoint           | Method   | Auth                  | Description                                              | Status Codes               |
+| :----------------- | :------- | :-------------------- | :------------------------------------------------------- | :------------------------- |
+| `/health`          | `GET`    | Public                | Ping endpoint for UptimeRobot / Render keep-alive        | `200`                      |
+| `/api/items`       | `GET`    | Public                | Retrieves all active menu items sorted by `order`        | `200`                      |
+| `/api/deals`       | `GET`    | Public                | Retrieves all active combo deals sorted by `order`       | `200`                      |
+| `/api/admin/login` | `POST`   | Public (Rate-Limited) | Authenticates admin using username/password; returns JWT | `200`, `401`, `429`        |
+| `/api/items`       | `POST`   | Admin (`Bearer`)      | Creates a new menu item                                  | `200`, `400`, `401`        |
+| `/api/items/:id`   | `PUT`    | Admin (`Bearer`)      | Updates an existing item or toggles `available`          | `200`, `400`, `401`, `404` |
+| `/api/items/:id`   | `DELETE` | Admin (`Bearer`)      | Removes a menu item                                      | `200`, `401`, `404`        |
+| `/api/deals`       | `POST`   | Admin (`Bearer`)      | Creates a new combo deal                                 | `200`, `400`, `401`        |
+| `/api/deals/:id`   | `PUT`    | Admin (`Bearer`)      | Updates deal parameters or toggles availability          | `200`, `400`, `401`, `404` |
+| `/api/deals/:id`   | `DELETE` | Admin (`Bearer`)      | Deletes a deal                                           | `200`, `401`, `404`        |
+| `/api/upload`      | `POST`   | Admin (`Bearer`)      | Multipart single image upload (`image`) to Cloudinary    | `200`, `400`, `401`, `500` |
 
 ---
 
@@ -337,6 +347,7 @@ sequenceDiagram
 ```
 
 #### Order Payload Format Sent to WhatsApp:
+
 ```text
 Assalam-o-Alaikum! I would like to order:
 
@@ -381,6 +392,7 @@ sequenceDiagram
 ### Workflow 4: Seeding & Catalog Synchronization
 
 The project provides automated migration utilities in `server/seed.js` and `server/seed-extra.js`:
+
 1. Reads all legacy images in `src/assets` and `src/assets/menu`.
 2. Verifies whether each asset exists in Cloudinary; uploads new files under folder `arabian-chick`.
 3. Verifies `process.env.ALLOW_SEED === "true"` to prevent accidental production database resets.
@@ -461,23 +473,25 @@ arabian-chicken/
 ## 8. Configuration & Environment Matrix
 
 ### Client Environment Variables (`.env` / Hosting Dashboard)
-| Variable | Description | Example / Default |
-| :--- | :--- | :--- |
+
+| Variable       | Description                              | Example / Default                                             |
+| :------------- | :--------------------------------------- | :------------------------------------------------------------ |
 | `VITE_API_URL` | Base URL of the deployed Express backend | `http://localhost:4000` or `https://arabian-api.onrender.com` |
 
 ### Server Environment Variables (`server/.env`)
-| Variable | Description | Required | Example |
-| :--- | :--- | :---: | :--- |
-| `PORT` | Listening port for Express | No | `4000` |
-| `MONGODB_URI` | MongoDB Atlas connection string | **Yes** | `mongodb+srv://user:pass@cluster.mongodb.net/arabian` |
-| `JWT_SECRET` | Secret key for signing admin tokens | **Yes** | `super-strong-jwt-secret-key-32-chars` |
-| `ADMIN_USERNAME` | Administrator login username | No | `admin` |
-| `ADMIN_PASSWORD` | Administrator login password | **Yes** | `secure-pass-hash-value` |
-| `CLIENT_ORIGIN` | Whitelist of allowed frontend origins (comma-separated) | **Yes** | `http://localhost:5173,https://arabian-chicken.lovable.app` |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary account cloud identifier | **Yes** | `dnxyz123` |
-| `CLOUDINARY_API_KEY` | Cloudinary API Key | **Yes** | `123456789012345` |
-| `CLOUDINARY_API_SECRET`| Cloudinary API Secret | **Yes** | `abcdefghijklmnopqrstuv` |
-| `ALLOW_SEED` | Guard flag for running database reset scripts | No | `true` |
+
+| Variable                | Description                                             | Required | Example                                                     |
+| :---------------------- | :------------------------------------------------------ | :------: | :---------------------------------------------------------- |
+| `PORT`                  | Listening port for Express                              |    No    | `4000`                                                      |
+| `MONGODB_URI`           | MongoDB Atlas connection string                         | **Yes**  | `mongodb+srv://user:pass@cluster.mongodb.net/arabian`       |
+| `JWT_SECRET`            | Secret key for signing admin tokens                     | **Yes**  | `super-strong-jwt-secret-key-32-chars`                      |
+| `ADMIN_USERNAME`        | Administrator login username                            |    No    | `admin`                                                     |
+| `ADMIN_PASSWORD`        | Administrator login password                            | **Yes**  | `secure-pass-hash-value`                                    |
+| `CLIENT_ORIGIN`         | Whitelist of allowed frontend origins (comma-separated) | **Yes**  | `http://localhost:5173,https://arabian-chicken.lovable.app` |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary account cloud identifier                     | **Yes**  | `dnxyz123`                                                  |
+| `CLOUDINARY_API_KEY`    | Cloudinary API Key                                      | **Yes**  | `123456789012345`                                           |
+| `CLOUDINARY_API_SECRET` | Cloudinary API Secret                                   | **Yes**  | `abcdefghijklmnopqrstuv`                                    |
+| `ALLOW_SEED`            | Guard flag for running database reset scripts           |    No    | `true`                                                      |
 
 ---
 
@@ -518,17 +532,20 @@ graph LR
 ### Local Development Setup
 
 1. **Clone the repository:**
+
    ```bash
    git clone <repo-url>
    cd arabian-chicken
    ```
 
 2. **Frontend Setup:**
+
    ```bash
    npm install
    npm run dev
    ```
-   *Frontend starts on `http://localhost:5173` (or port selected by Vite).*
+
+   _Frontend starts on `http://localhost:5173` (or port selected by Vite)._
 
 3. **Backend Setup:**
    ```bash
@@ -537,20 +554,39 @@ graph LR
    # Configure server/.env with your MongoDB and Cloudinary credentials
    npm run dev
    ```
-   *Backend starts on `http://localhost:4000`.*
+   _Backend starts on `http://localhost:4000`._
 
 ### Database Seeding & Migration Runbook
 
 To reset or seed the database from local menu items and upload all images to Cloudinary:
+
 ```bash
 cd server
 ALLOW_SEED=true npm run seed
 ```
-*(Use `npm run seed:extra` if executing supplementary category batches).*
+
+_(Use `npm run seed:extra` if executing supplementary category batches)._
 
 ### Adding a New Food Category or Deal
-1. **Frontend Category Tab:** Add the new category slug and title to `CATEGORIES` in [src/data/menu.ts](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/data/menu.ts) and [src/routes/admin.tsx](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/routes/admin.tsx).
+
+1. **Frontend Category Tab:** Add the new category slug and title to `CATEGORIES` in [src/data/menu.ts](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/data/menu.ts) and [app/admin/page.tsx](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/admin/page.tsx).
 2. **Database:** Add items via the `/admin` portal GUI or push seed data directly via `server/seed.js`.
 
 ---
-*Documented with dedication for **Arabian Chick, N** — Peshawar, Pakistan.*
+
+## 9. Next.js Migration Status & Full-Stack Architecture (Phases 1 — 6 Complete)
+
+The application has been unified into Next.js App Router on branch `feat/nextjs-migration`:
+
+- **Storefront Page:** [`app/page.tsx`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/page.tsx)
+- **Admin Portal:** [`app/admin/page.tsx`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/admin/page.tsx)
+- **Server Route Handlers:** [`app/api/`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/api/) (`items`, `deals`, `admin/login`, `admin/verify`, `admin/logout`, `upload`, `health`)
+- **Shared DB & Auth:** [`src/lib/db.ts`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/lib/db.ts) (Mongoose connection cache) & [`src/lib/auth.ts`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/lib/auth.ts) (JWT, HttpOnly cookie, timing-safe auth, CSRF validation, IP rate limit)
+- **Cloudinary Image Pipeline:** [`app/api/upload/route.ts`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/api/upload/route.ts), [`src/lib/cloudinary.ts`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/lib/cloudinary.ts), and binary magic-bytes validation in [`src/lib/validation.ts`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/lib/validation.ts)
+- **Comprehensive Verification (135 / 135 Passed):**
+  - [`test-all.mjs`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/test-all.mjs): 109 / 109 automated tests passing across API handlers, storefront E2E, authentication security, and Cloudinary media flows.
+  - [`test-production-sim.mjs`](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/test-production-sim.mjs): 26 / 26 automated tests passing in native production runtime (`next start -p 3000`).
+
+---
+
+_Documented with dedication for **Arabian Chick, N** — Peshawar, Pakistan._

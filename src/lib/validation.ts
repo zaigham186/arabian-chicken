@@ -11,6 +11,62 @@ export const slugify = (s: string): string =>
 
 export const isValidObjectId = (id: string): boolean => mongoose.isValidObjectId(id);
 
+/**
+ * Validates image magic bytes to ensure file is an authentic image (JPEG, PNG, GIF, WebP, AVIF)
+ * and not an executable or script disguised with an image extension/MIME.
+ */
+export function isValidImageBuffer(buffer: Buffer): boolean {
+  if (!buffer || buffer.length < 12) return false;
+
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return true;
+  }
+
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47 &&
+    buffer[4] === 0x0d &&
+    buffer[5] === 0x0a &&
+    buffer[6] === 0x1a &&
+    buffer[7] === 0x0a
+  ) {
+    return true;
+  }
+
+  // GIF: GIF87a or GIF89a
+  if (buffer[0] === 0x47 && buffer[1] === 0x49 && buffer[2] === 0x46 && buffer[3] === 0x38) {
+    return true;
+  }
+
+  // WebP: RIFF .... WEBP
+  if (
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50
+  ) {
+    return true;
+  }
+
+  // AVIF: ....ftypavif or ....ftypavis or mif1
+  if (buffer[4] === 0x66 && buffer[5] === 0x74 && buffer[6] === 0x79 && buffer[7] === 0x70) {
+    const brand = buffer.subarray(8, 12).toString("ascii");
+    if (["avif", "avis", "mif1"].includes(brand)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function cleanItem(b: any): { data?: any; error?: string } {
   const prices = Array.isArray(b?.prices)
     ? b.prices

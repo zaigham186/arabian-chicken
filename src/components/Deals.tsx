@@ -5,8 +5,7 @@ import { useCart } from "./cart";
 import { SmartImage } from "./SmartImage";
 
 function CardImage({ src, alt }: { src?: string | undefined; alt: string }) {
-  if (!src)
-    return <div className="grid h-56 place-items-center bg-charcoal-deep text-5xl">🍽️</div>;
+  if (!src) return <div className="grid h-56 place-items-center bg-charcoal-deep text-5xl">🍽️</div>;
   return <SmartImage src={src} alt={alt} className="h-56" />;
 }
 
@@ -109,7 +108,9 @@ export function Deals() {
     <section id="deals" className="bg-cream py-20 text-cream-foreground sm:py-24">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-brand-red">Deals</span>
+          <span className="text-xs font-black uppercase tracking-[0.2em] text-brand-red">
+            Deals
+          </span>
           <h2 className="heading-underline mx-auto mt-2 font-display text-4xl font-black text-balance sm:text-5xl">
             👨‍👩‍👧‍👦 Family Deals
           </h2>

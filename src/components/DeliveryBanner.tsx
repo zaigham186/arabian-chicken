@@ -16,8 +16,7 @@ export function DeliveryBanner() {
         <div
           className="absolute inset-0 opacity-[0.06]"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+            backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
             backgroundSize: "32px 32px",
           }}
         />
@@ -25,16 +24,13 @@ export function DeliveryBanner() {
 
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/4 px-6 py-12 shadow-2xl backdrop-blur-sm sm:px-10 sm:py-14 lg:px-16 lg:py-16">
-
           {/* Decorative glow */}
           <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-brand-red/20 blur-3xl" />
           <div className="absolute -bottom-32 -left-24 h-72 w-72 rounded-full bg-brand-gold/10 blur-3xl" />
 
           <div className="relative z-10 grid items-center gap-12 lg:grid-cols-[1fr_auto]">
-
             {/* Content */}
             <div className="text-center lg:text-left">
-
               {/* Label */}
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand-gold/30 bg-brand-gold/10 px-4 py-2">
                 <span className="text-lg">🛵</span>
@@ -45,14 +41,12 @@ export function DeliveryBanner() {
 
               <h2 className="font-display text-4xl font-black leading-tight tracking-tight text-primary-foreground text-balance sm:text-5xl lg:text-6xl">
                 Your Favorite Food,
-                <span className="block text-brand-gold">
-                  Delivered Fresh.
-                </span>
+                <span className="block text-brand-gold">Delivered Fresh.</span>
               </h2>
 
               <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-white/70 sm:text-lg lg:mx-0">
-                Craving something delicious? Place your order and enjoy
-                your favorite meals, hot and fresh, right at your doorstep.
+                Craving something delicious? Place your order and enjoy your favorite meals, hot and
+                fresh, right at your doorstep.
               </p>
 
               {/* Feature points */}
@@ -77,7 +71,6 @@ export function DeliveryBanner() {
             {/* Order Card */}
             <div className="w-full lg:w-90">
               <div className="rounded-2xl border border-white/10 bg-black/20 p-5 shadow-xl backdrop-blur-md sm:p-6">
-
                 <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-white/50">
                   Order Now
                 </p>
