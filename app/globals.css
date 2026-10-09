@@ -1,0 +1,269 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@source "../src";
+@source "../app";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Arabian Chick, N — design system
+ * Brand palette: deep red, golden yellow, charcoal, white.
+ * All colors in oklch. Semantic tokens only.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand tokens */
+  --color-brand-red: var(--brand-red);
+  --color-brand-red-deep: var(--brand-red-deep);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-gold-deep: var(--brand-gold-deep);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-deep: var(--charcoal-deep);
+  --color-charcoal-card: var(--charcoal-card);
+  --color-cream: var(--cream);
+  --color-cream-foreground: var(--cream-foreground-standard);
+
+  --font-display: "Poppins", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* Brand palette */
+  --brand-red: oklch(0.55 0.24 28);
+  --brand-red-deep: oklch(0.44 0.21 28);
+  --brand-gold: oklch(0.79 0.17 75);
+  --brand-gold-deep: oklch(0.67 0.16 70);
+  --charcoal: oklch(0.21 0 0);
+  --charcoal-deep: oklch(0.16 0 0);
+  --charcoal-card: oklch(0.26 0 0);
+  --cream: oklch(0.975 0.008 85);
+  --cream-foreground-standard: oklch(0.21 0 0);
+
+  /* Dark-first base */
+  --background: var(--charcoal);
+  --foreground: oklch(0.98 0 0);
+  --card: var(--charcoal-card);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: var(--charcoal-deep);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: var(--brand-red);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.3 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.3 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --accent: var(--brand-gold);
+  --accent-foreground: var(--charcoal);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: var(--brand-gold);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Hero text entrance */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise {
+  opacity: 0;
+  animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-rise-1 { animation-delay: 0.1s; }
+.animate-rise-2 { animation-delay: 0.28s; }
+.animate-rise-3 { animation-delay: 0.46s; }
+.animate-rise-4 { animation-delay: 0.64s; }
+
+/* Gold sheen sweep on deal / offer cards */
+@keyframes sheen {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  100% { transform: translateX(240%) skewX(-18deg); }
+}
+
+.sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(1 0 0 / 18%),
+    transparent
+  );
+  animation: sheen 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Section heading accent underline */
+.heading-underline::after {
+  content: "";
+  display: block;
+  width: 4.5rem;
+  height: 0.3rem;
+  margin-top: 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--brand-red), var(--brand-gold));
+}
+
+/* Hide scrollbar for horizontal deal scroller */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+@keyframes kenburns {
+  from { transform: scale(1.05) translate3d(0, 0, 0); }
+  to   { transform: scale(1.18) translate3d(-1.5%, -1%, 0); }
+}
+.animate-kenburns {
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+
+@keyframes float3d {
+  0%, 100% { transform: translate3d(0, 0, 0) rotateX(0deg) rotateY(-15deg) rotateZ(-4deg); }
+  50%      { transform: translate3d(0, -28px, 0) rotateX(18deg) rotateY(20deg) rotateZ(8deg); }
+}
+.animate-float3d {
+  animation: float3d 7s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { opacity: 0.5; transform: translateY(-50%) scale(1); }
+  50%      { opacity: 0.9; transform: translateY(-50%) scale(1.15); }
+}
+.animate-glow {
+  animation: glow 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-kenburns, .animate-float3d, .animate-glow { animation: none; }
+}
+
+/* Scroll reveal: text aur cards */
+.about-reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s, ring-color 0.3s;
+}
+.about-section[data-inview="true"] .about-reveal {
+  opacity: 1;
+  transform: translateY(0);
+}
+.about-d1 { transition-delay: 0.05s; }
+.about-d2 { transition-delay: 0.2s; }
+.about-d3 { transition-delay: 0.35s; }
+
+/* Image right se slide + 3D rotate ho kar aati hai */
+.about-image-reveal {
+  opacity: 0;
+  transform: translateX(80px) rotateY(-12deg) scale(0.95);
+  transition: opacity 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s,
+              transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+.about-section[data-inview="true"] .about-image-reveal {
+  opacity: 1;
+  transform: translateX(0) rotateY(0) scale(1);
+}
+
+/* Heading ke neeche wali line grow ho */
+.about-section .heading-underline::after {
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.9s ease 0.7s;
+}
+.about-section[data-inview="true"] .heading-underline::after {
+  transform: scaleX(1);
+}
+
+@keyframes blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(30px, -40px) scale(1.15); }
+}
+.animate-blob { animation: blob 14s ease-in-out infinite; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.animate-bob { animation: bob 3s ease-in-out infinite; }
+
+@keyframes frame {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-6px, -6px); }
+}
+.animate-frame { animation: frame 5s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .about-reveal, .about-image-reveal { opacity: 1; transform: none; transition: none; }
+  .animate-blob, .animate-bob, .animate-frame { animation: none; }
+}

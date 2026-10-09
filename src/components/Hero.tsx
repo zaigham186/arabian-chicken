@@ -46,8 +46,12 @@ export function Hero() {
             "translate3d(calc(var(--mx) * -25px), calc(var(--my) * -25px), 0)",
         }}
       >
-       <img
-  src={heroImg}
+        <img
+          src={
+            typeof heroImg === "object" && heroImg && "src" in heroImg
+              ? (heroImg as any).src
+              : heroImg
+          }
   alt="Arabian Chick, N signature feast — wings, BBQ and pizza"
   className="animate-kenburns h-full w-full object-cover object-center"
 />

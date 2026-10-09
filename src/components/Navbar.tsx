@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Logo } from "./Logo";
 import { CONTACT } from "@/data/menu";
 import { useCart } from "./cart";
@@ -142,13 +143,13 @@ export function Navbar() {
           </button>
 
           {/* Admin: sabse end mein, hamesha dikhta hai */}
-          <a
+          <Link
             href="/admin"
             className="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent/50 px-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             <LockIcon />
             Admin
-          </a>
+          </Link>
         </nav>
 
         {/* Mobile hamburger */}
@@ -223,13 +224,13 @@ export function Navbar() {
             Add to Cart {count > 0 && `(${count})`}
           </button>
 
-          <a
+          <Link
             href="/admin"
             className="mt-3 flex h-10 items-center justify-center gap-2 rounded-sm border border-accent/50 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent"
           >
             <LockIcon />
             Admin
-          </a>
+          </Link>
         </nav>
       )}
     </header>

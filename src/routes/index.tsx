@@ -40,7 +40,10 @@ export const Route = createFileRoute("/")({
     links: [
       {
         rel: "icon",
-        href: arabianLogo,
+        href:
+          typeof arabianLogo === "object" && arabianLogo && "src" in arabianLogo
+            ? (arabianLogo as any).src
+            : String(arabianLogo),
       },
     ],
   }),

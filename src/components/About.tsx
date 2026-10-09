@@ -123,7 +123,11 @@ export function About() {
             <div className="group relative overflow-hidden rounded-[2rem] bg-white p-2 shadow-2xl">
               <div className="relative overflow-hidden rounded-[1.5rem]">
                 <img
-                  src={aboutImg}
+                  src={
+                    typeof aboutImg === "object" && aboutImg && "src" in aboutImg
+                      ? (aboutImg as any).src
+                      : aboutImg
+                  }
                   alt="Fresh food being prepared at Arabian Chick, N"
                   loading="lazy"
                   width={1024}

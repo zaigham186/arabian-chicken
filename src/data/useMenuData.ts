@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { DEALS, MENU_ITEMS, type Deal, type MenuItem } from "./menu";
 
-const API = import.meta.env["VITE_API_URL"] ?? "http://localhost:4000";
+const API =
+  (typeof process !== "undefined" && process.env?.["NEXT_PUBLIC_API_URL"]) ||
+  (typeof import.meta !== "undefined" && (import.meta as any).env?.["VITE_API_URL"]) ||
+  "";
 
 type Data = { items: MenuItem[]; deals: Deal[] };
 let cache: Promise<Data> | null = null;
