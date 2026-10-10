@@ -28,6 +28,7 @@ function FamilyCard({ deal }: { deal: Deal }) {
           </span>
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() =>
               addItem({
                 key: String(deal.id),
@@ -82,6 +83,7 @@ function SizedCard({ item }: { item: MenuItem }) {
         </p>
         <button
           type="button"
+          suppressHydrationWarning
           onClick={() =>
             addItem({
               key: `${item.id}-${current.label}`,

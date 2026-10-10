@@ -188,6 +188,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
         method,
         headers,
         credentials: "include",
+        cache: "no-store",
         ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
       });
       if (r.status === 401) {

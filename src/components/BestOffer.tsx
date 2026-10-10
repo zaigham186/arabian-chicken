@@ -42,6 +42,7 @@ function OfferCard({ item }: { item: MenuItem }) {
               <button
                 key={p.label}
                 type="button"
+                suppressHydrationWarning
                 onClick={() => setSelected(i)}
                 className={`cursor-pointer rounded-full border px-3 py-1 text-xs font-bold transition-colors ${
                   i === selected
@@ -62,6 +63,7 @@ function OfferCard({ item }: { item: MenuItem }) {
         <div className="mt-auto pt-5">
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() =>
               addItem({
                 key: `${item.id}-${current.label}`,

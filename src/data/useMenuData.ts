@@ -10,7 +10,7 @@ type Data = { items: MenuItem[]; deals: Deal[] };
 let cache: Promise<Data> | null = null;
 
 async function getJson(path: string) {
-  const r = await fetch(`${API}${path}`);
+  const r = await fetch(`${API}${path}`, { cache: "no-store" });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   return r.json();
 }

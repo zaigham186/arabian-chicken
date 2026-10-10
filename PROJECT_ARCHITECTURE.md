@@ -160,7 +160,7 @@ src/routes/
 
 ### Design System & Theme Tokens
 
-Located in [src/styles.css](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/src/styles.css) and driven by Tailwind CSS v4 `@theme inline`:
+Located in [app/globals.css](file:///c:/Users/Hp/OneDrive/Desktop/All%20files/arabian-chicken/app/globals.css) and driven by Tailwind CSS v4 `@theme inline`:
 
 - **Palette (OKLCH Standard):**
   - `--brand-red`: `oklch(0.55 0.24 28)` — Signature brand crimson.

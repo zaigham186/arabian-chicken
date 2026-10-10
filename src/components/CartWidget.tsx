@@ -21,6 +21,7 @@ export function CartWidget() {
       {/* Floating button: sirf mobile par (desktop par navbar mein "Add to Cart" hai) */}
       <button
         type="button"
+        suppressHydrationWarning
         onClick={() => setOpen(true)}
         aria-label={`Open your order — ${count} items`}
         className="fixed bottom-6 right-6 z-50 flex h-16 items-center gap-3 rounded-2xl bg-primary px-5 font-display font-bold text-primary-foreground shadow-[0_12px_32px_-8px_var(--brand-red)] ring-2 ring-brand-gold/60 transition-transform hover:scale-105 lg:hidden"

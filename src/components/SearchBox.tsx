@@ -85,6 +85,13 @@ export function SearchBox({ className = "", onDone }: { className?: string; onDo
           <path d="m20 20-3.5-3.5" />
         </svg>
         <input
+          type="search"
+          name="search"
+          autoComplete="off"
+          spellCheck={false}
+          data-lpignore="true"
+          data-1p-ignore="true"
+          suppressHydrationWarning
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onFocus={() => setFocus(true)}
@@ -95,6 +102,7 @@ export function SearchBox({ className = "", onDone }: { className?: string; onDo
         {q && (
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => setQ("")}
             aria-label="Clear search"
             className="cursor-pointer text-foreground/60 hover:text-foreground"

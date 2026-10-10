@@ -3,6 +3,8 @@ import { connectDB, Item } from "@/lib/db";
 import { verifyAdminToken, unauthorizedResponse } from "@/lib/auth";
 import { cleanItem, slugify } from "@/lib/validation";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await connectDB();

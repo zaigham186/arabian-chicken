@@ -158,6 +158,7 @@ function MenuItemCard({ item }: { item: MenuItem }) {
 
         <button
           type="button"
+          suppressHydrationWarning
           onClick={() => {
             addItem({
               key: `${item.id}-${price.label}-${[...activeToppings].sort().join("|")}`,
@@ -209,6 +210,7 @@ function DealCard({ deal, compact = false }: { deal: Deal; compact?: boolean }) 
         </span>
         <button
           type="button"
+          suppressHydrationWarning
           onClick={() =>
             addItem({
               key: `deal-${deal.id}`,
@@ -283,6 +285,7 @@ export function MenuSection() {
             <button
               key={c.id}
               type="button"
+              suppressHydrationWarning
               onClick={() => setActive(c.id)}
               className={`shrink-0 cursor-pointer rounded-full px-5 py-2.5 text-sm font-bold transition-colors ${
                 active === c.id

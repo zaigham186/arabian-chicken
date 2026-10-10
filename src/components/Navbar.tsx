@@ -129,6 +129,7 @@ export function Navbar() {
           {/* Add to Cart */}
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => setCartOpen(true)}
             aria-label={`Add to Cart, ${count} items`}
             className="relative inline-flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-accent/60 px-4 text-sm font-bold text-accent transition-all hover:scale-105 hover:bg-accent hover:text-accent-foreground"
@@ -155,6 +156,7 @@ export function Navbar() {
         {/* Mobile hamburger */}
         <button
           type="button"
+          suppressHydrationWarning
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
@@ -214,6 +216,7 @@ export function Navbar() {
 
           <button
             type="button"
+            suppressHydrationWarning
             onClick={() => {
               setOpen(false);
               setCartOpen(true);
