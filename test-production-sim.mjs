@@ -73,47 +73,101 @@ async function runProductionSimulation() {
     const rHome = await fetch(`${BASE}/`);
     const tHome = await rHome.text();
     assert("Production Homepage HTTP 200", rHome.status === 200, `status: ${rHome.status}`);
-    assert("Security header X-Content-Type-Options", rHome.headers.get("x-content-type-options") === "nosniff", "nosniff present");
-    assert("Security header X-Frame-Options", rHome.headers.get("x-frame-options") === "SAMEORIGIN", "SAMEORIGIN present");
-    assert("Security header HSTS", !!rHome.headers.get("strict-transport-security"), "HSTS present");
-    assert("Production Homepage HTML content", tHome.includes("Arabian Chick"), "brand text verified");
-    assert("Production Homepage Next scripts", tHome.includes("/_next/static"), "optimized assets verified");
+    assert(
+      "Security header X-Content-Type-Options",
+      rHome.headers.get("x-content-type-options") === "nosniff",
+      "nosniff present",
+    );
+    assert(
+      "Security header X-Frame-Options",
+      rHome.headers.get("x-frame-options") === "SAMEORIGIN",
+      "SAMEORIGIN present",
+    );
+    assert(
+      "Security header HSTS",
+      !!rHome.headers.get("strict-transport-security"),
+      "HSTS present",
+    );
+    assert(
+      "Production Homepage HTML content",
+      tHome.includes("Arabian Chick"),
+      "brand text verified",
+    );
+    assert(
+      "Production Homepage Next scripts",
+      tHome.includes("/_next/static"),
+      "optimized assets verified",
+    );
 
     // 2. Admin Page Production Render
     const rAdmin = await fetch(`${BASE}/admin`);
     const tAdmin = await rAdmin.text();
     assert("Production Admin Page HTTP 200", rAdmin.status === 200, `status: ${rAdmin.status}`);
-    assert("Production Admin Page markup", tAdmin.includes("Checking authorization...") || tAdmin.includes("Admin") || tAdmin.includes("Password"), "admin UI verified");
+    assert(
+      "Production Admin Page markup",
+      tAdmin.includes("Checking authorization...") ||
+        tAdmin.includes("Admin") ||
+        tAdmin.includes("Password"),
+      "admin UI verified",
+    );
 
     // 3. Health & Public API Endpoints
     const rHealth = await fetch(`${BASE}/api/health`);
     const dHealth = await rHealth.json();
-    assert("Production Health API", rHealth.status === 200 && dHealth.database === "connected", `db: ${dHealth.database}`);
+    assert(
+      "Production Health API",
+      rHealth.status === 200 && dHealth.database === "connected",
+      `db: ${dHealth.database}`,
+    );
 
     const rLegHealth = await fetch(`${BASE}/health`);
     const dLegHealth = await rLegHealth.json();
-    assert("Production Legacy /health ping", rLegHealth.status === 200 && dLegHealth.ok === true, "ok: true");
+    assert(
+      "Production Legacy /health ping",
+      rLegHealth.status === 200 && dLegHealth.ok === true,
+      "ok: true",
+    );
 
     const rItems = await fetch(`${BASE}/api/items`);
     const dItems = await rItems.json();
-    assert("Production GET /api/items", rItems.status === 200 && Array.isArray(dItems) && dItems.length > 0, `${dItems.length} items`);
+    assert(
+      "Production GET /api/items",
+      rItems.status === 200 && Array.isArray(dItems) && dItems.length > 0,
+      `${dItems.length} items`,
+    );
 
     const rDeals = await fetch(`${BASE}/api/deals`);
     const dDeals = await rDeals.json();
-    assert("Production GET /api/deals", rDeals.status === 200 && Array.isArray(dDeals) && dDeals.length > 0, `${dDeals.length} deals`);
+    assert(
+      "Production GET /api/deals",
+      rDeals.status === 200 && Array.isArray(dDeals) && dDeals.length > 0,
+      `${dDeals.length} deals`,
+    );
 
     // 3b. Production SEO, Robots, Sitemap & Manifest Verification
     const rRobots = await fetch(`${BASE}/robots.txt`);
     const tRobots = await rRobots.text();
-    assert("Production /robots.txt HTTP 200", rRobots.status === 200 && tRobots.includes("Disallow: /admin"), "robots.txt disallows /admin");
+    assert(
+      "Production /robots.txt HTTP 200",
+      rRobots.status === 200 && tRobots.includes("Disallow: /admin"),
+      "robots.txt disallows /admin",
+    );
 
     const rSitemap = await fetch(`${BASE}/sitemap.xml`);
     const tSitemap = await rSitemap.text();
-    assert("Production /sitemap.xml HTTP 200", rSitemap.status === 200 && tSitemap.includes("<urlset"), "sitemap.xml verified");
+    assert(
+      "Production /sitemap.xml HTTP 200",
+      rSitemap.status === 200 && tSitemap.includes("<urlset"),
+      "sitemap.xml verified",
+    );
 
     const rManifest = await fetch(`${BASE}/manifest.webmanifest`);
     const dManifest = await rManifest.json().catch(() => ({}));
-    assert("Production PWA Manifest", rManifest.status === 200 && dManifest.short_name === "Arabian Chick", "PWA manifest active");
+    assert(
+      "Production PWA Manifest",
+      rManifest.status === 200 && dManifest.short_name === "Arabian Chick",
+      "PWA manifest active",
+    );
 
     // 4. Admin Authentication in Production Runtime
     const rWrongLogin = await fetch(`${BASE}/api/admin/login`, {
@@ -121,7 +175,11 @@ async function runProductionSimulation() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ password: "invalid_password" }),
     });
-    assert("Production login rejects invalid password", rWrongLogin.status === 401, `status: ${rWrongLogin.status}`);
+    assert(
+      "Production login rejects invalid password",
+      rWrongLogin.status === 401,
+      `status: ${rWrongLogin.status}`,
+    );
 
     const rLogin = await fetch(`${BASE}/api/admin/login`, {
       method: "POST",
@@ -131,8 +189,16 @@ async function runProductionSimulation() {
     const dLogin = await rLogin.json();
     const token = dLogin.token;
     const setCookie = rLogin.headers.get("set-cookie") || "";
-    assert("Production login succeeds with valid password", rLogin.status === 200 && !!token, "token acquired");
-    assert("Production login issues admin_token cookie", setCookie.includes("admin_token="), "cookie verified");
+    assert(
+      "Production login succeeds with valid password",
+      rLogin.status === 200 && !!token,
+      "token acquired",
+    );
+    assert(
+      "Production login issues admin_token cookie",
+      setCookie.includes("admin_token="),
+      "cookie verified",
+    );
 
     const cookieMatch = setCookie.match(/admin_token=([^;]+)/);
     const cookieHeader = cookieMatch ? `admin_token=${cookieMatch[1]}` : "";
@@ -142,13 +208,21 @@ async function runProductionSimulation() {
       headers: { Authorization: `Bearer ${token}` },
     });
     const dVerifyHeader = await rVerifyHeader.json();
-    assert("Session verification via Bearer token", rVerifyHeader.status === 200 && dVerifyHeader.authenticated === true, "authenticated: true");
+    assert(
+      "Session verification via Bearer token",
+      rVerifyHeader.status === 200 && dVerifyHeader.authenticated === true,
+      "authenticated: true",
+    );
 
     const rVerifyCookie = await fetch(`${BASE}/api/admin/verify`, {
       headers: { Cookie: cookieHeader },
     });
     const dVerifyCookie = await rVerifyCookie.json();
-    assert("Session verification via HttpOnly cookie", rVerifyCookie.status === 200 && dVerifyCookie.authenticated === true, "authenticated: true");
+    assert(
+      "Session verification via HttpOnly cookie",
+      rVerifyCookie.status === 200 && dVerifyCookie.authenticated === true,
+      "authenticated: true",
+    );
 
     // 6. Production Staging Database CRUD: Items
     const newItem = {
@@ -168,7 +242,11 @@ async function runProductionSimulation() {
     });
     const dCreateItem = await rCreateItem.json();
     const createdItemId = dCreateItem._id;
-    assert("Production item creation", rCreateItem.status === 200 && !!createdItemId, `id: ${createdItemId}`);
+    assert(
+      "Production item creation",
+      rCreateItem.status === 200 && !!createdItemId,
+      `id: ${createdItemId}`,
+    );
 
     // Fast stock toggle via Cookie
     const rToggleItem = await fetch(`${BASE}/api/items/${createdItemId}`, {
@@ -181,7 +259,11 @@ async function runProductionSimulation() {
       body: JSON.stringify({ available: false }),
     });
     const dToggleItem = await rToggleItem.json();
-    assert("Production item stock toggle via Cookie", rToggleItem.status === 200 && dToggleItem.available === false, "available: false");
+    assert(
+      "Production item stock toggle via Cookie",
+      rToggleItem.status === 200 && dToggleItem.available === false,
+      "available: false",
+    );
 
     // Delete item
     const rDelItem = await fetch(`${BASE}/api/items/${createdItemId}`, {
@@ -208,7 +290,11 @@ async function runProductionSimulation() {
     });
     const dCreateDeal = await rCreateDeal.json();
     const createdDealId = dCreateDeal._id;
-    assert("Production deal creation", rCreateDeal.status === 200 && !!createdDealId, `id: ${createdDealId}`);
+    assert(
+      "Production deal creation",
+      rCreateDeal.status === 200 && !!createdDealId,
+      `id: ${createdDealId}`,
+    );
 
     // Fast stock toggle
     const rToggleDeal = await fetch(`${BASE}/api/deals/${createdDealId}`, {
@@ -220,7 +306,11 @@ async function runProductionSimulation() {
       body: JSON.stringify({ available: false }),
     });
     const dToggleDeal = await rToggleDeal.json();
-    assert("Production deal stock toggle", rToggleDeal.status === 200 && dToggleDeal.available === false, "available: false");
+    assert(
+      "Production deal stock toggle",
+      rToggleDeal.status === 200 && dToggleDeal.available === false,
+      "available: false",
+    );
 
     // Delete deal
     const rDelDeal = await fetch(`${BASE}/api/deals/${createdDealId}`, {
@@ -231,11 +321,11 @@ async function runProductionSimulation() {
 
     // 8. Production Cloudinary Upload & Delivery
     const pngBuffer = Buffer.from([
-      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
-      0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1f, 0x15, 0xc4,
-      0x89, 0x00, 0x00, 0x00, 0x0a, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00, 0x01, 0x00, 0x00,
-      0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae,
-      0x42, 0x60, 0x82,
+      0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44,
+      0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1f,
+      0x15, 0xc4, 0x89, 0x00, 0x00, 0x00, 0x0a, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0x00,
+      0x01, 0x00, 0x00, 0x05, 0x00, 0x01, 0x0d, 0x0a, 0x2d, 0xb4, 0x00, 0x00, 0x00, 0x00, 0x49,
+      0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
     ]);
     const formData = new FormData();
     formData.append("image", new Blob([pngBuffer], { type: "image/png" }), "prod_sim_test.png");
@@ -246,7 +336,11 @@ async function runProductionSimulation() {
       body: formData,
     });
     const dUpload = await rUpload.json();
-    assert("Production Cloudinary upload", rUpload.status === 200 && dUpload.url?.startsWith("https://res.cloudinary.com"), `url: ${dUpload.url}`);
+    assert(
+      "Production Cloudinary upload",
+      rUpload.status === 200 && dUpload.url?.startsWith("https://res.cloudinary.com"),
+      `url: ${dUpload.url}`,
+    );
 
     if (dUpload.url) {
       const rCdn = await fetch(dUpload.url);
@@ -259,7 +353,11 @@ async function runProductionSimulation() {
       headers: { Cookie: cookieHeader, Origin: BASE },
     });
     const logoutCookie = rLogout.headers.get("set-cookie") || "";
-    assert("Production logout clears session cookie", rLogout.status === 200 && logoutCookie.includes("Max-Age=0"), "Max-Age=0 verified");
+    assert(
+      "Production logout clears session cookie",
+      rLogout.status === 200 && logoutCookie.includes("Max-Age=0"),
+      "Max-Age=0 verified",
+    );
 
     // 10. Security Audit: Client bundle check
     const staticDir = path.join(process.cwd(), ".next", "static");
@@ -274,8 +372,11 @@ async function runProductionSimulation() {
             const content = fs.readFileSync(full, "utf8");
             if (
               (process.env.MONGODB_URI && content.includes(process.env.MONGODB_URI)) ||
-              (process.env.CLOUDINARY_API_SECRET && content.includes(process.env.CLOUDINARY_API_SECRET)) ||
-              (process.env.JWT_SECRET && process.env.JWT_SECRET !== "default-secret-change-in-prod" && content.includes(process.env.JWT_SECRET))
+              (process.env.CLOUDINARY_API_SECRET &&
+                content.includes(process.env.CLOUDINARY_API_SECRET)) ||
+              (process.env.JWT_SECRET &&
+                process.env.JWT_SECRET !== "default-secret-change-in-prod" &&
+                content.includes(process.env.JWT_SECRET))
             ) {
               secretLeakFound = true;
             }
@@ -284,8 +385,11 @@ async function runProductionSimulation() {
       }
       scanDir(staticDir);
     }
-    assert("Zero server secrets leaked in production client bundles", !secretLeakFound, ".next/static clean");
-
+    assert(
+      "Zero server secrets leaked in production client bundles",
+      !secretLeakFound,
+      ".next/static clean",
+    );
   } finally {
     if (spawned) {
       console.log("\nStopping production test server...");

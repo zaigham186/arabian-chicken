@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import heroImg from "@/assets/hero.jpg";
-import { CONTACT } from "@/data/menu";
 
 const FLOATERS = [
   { emoji: "🍕", className: "right-[8%] top-[18%] text-7xl", depth: 60, delay: "0s" },
@@ -94,13 +93,12 @@ export function Hero() {
           🔥 Best Offer — New Arrival
         </span>
 
-        <h1 className="animate-rise animate-rise-2 mt-6 max-w-3xl font-display text-5xl font-black leading-[1.05] tracking-tight text-foreground text-balance [text-shadow:0_10px_40px_rgba(0,0,0,0.6)] sm:text-6xl lg:text-7xl">
+        <h1 className="animate-rise animate-rise-2 mt-6 max-w-3xl font-display text-4xl font-black leading-[1.05] tracking-tight text-foreground text-balance [text-shadow:0_10px_40px_rgba(0,0,0,0.6)] sm:text-5xl lg:text-5xl">
           Arabian Chick,{" "}
           <span className="bg-linear-to-r from-brand-red via-brand-gold to-brand-gold bg-clip-text text-transparent">
             N
           </span>
         </h1>
-
         <p className="animate-rise animate-rise-3 mt-5 max-w-xl text-lg font-medium text-foreground/85 sm:text-xl">
           Fast Food &amp; Pizza Restaurant — Peshawar. Crispy wings, sizzling BBQ and handcrafted
           pizzas, served hot &amp; fresh.
@@ -114,12 +112,10 @@ export function Hero() {
             Explore Menu
           </a>
           <a
-            href={CONTACT.whatsappLink}
-            target="_blank"
-            rel="noreferrer"
+            href="#deals"
             className="inline-flex h-14 items-center rounded-xl border-2 border-accent px-8 font-display text-base font-bold text-accent backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-accent hover:text-accent-foreground"
           >
-            Order on WhatsApp
+            View Deals
           </a>
         </div>
 

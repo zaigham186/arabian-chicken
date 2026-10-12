@@ -27,7 +27,12 @@ const FAMILY = [
   ["family-combo-1", "Family Combo 1", "8 Chicken Pieces, 1 Liter Drink", 1650],
   ["family-combo-2", "Family Combo 2", "6 Zinger Burger, 1 Family Fries, 1.5 Liter Drink", 2950],
   ["family-combo-3", "Family Combo 3", "4 Zinger Burger, 1 Liter Drink", 1750],
-  ["family-combo-4", "Family Combo 4", "4 Zinger, 4 Pcs Chicken, 1 Family Fries, 1.5 Liter Drink", 2850],
+  [
+    "family-combo-4",
+    "Family Combo 4",
+    "4 Zinger, 4 Pcs Chicken, 1 Family Fries, 1.5 Liter Drink",
+    2850,
+  ],
   ["family-combo-5", "Family Combo 5", "5 Zinger Burger, 1.5 Liter Drink", 2150],
   ["family-combo-6", "Family Combo 6", "5 Zinger Burger, 5 Pcs Chicken, 1.5 Liter Drink", 3100],
 ];

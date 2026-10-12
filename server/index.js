@@ -48,8 +48,7 @@ app.use(express.json({ limit: "100kb" }));
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) =>
-    cb(null, /^image\/(jpeg|png|webp|avif|gif)$/.test(file.mimetype)),
+  fileFilter: (_req, file, cb) => cb(null, /^image\/(jpeg|png|webp|avif|gif)$/.test(file.mimetype)),
 });
 
 /* ---------- helpers ---------- */
@@ -106,7 +105,11 @@ function cleanDeal(b) {
   };
 }
 
-const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const slugify = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
 const validId = (req, res, next) =>
   mongoose.isValidObjectId(req.params.id) ? next() : bad(res, "Invalid id");
 
@@ -123,17 +126,22 @@ function requireAdmin(req, res, next) {
 
 app.use(
   "/api/admin/login",
-  rateLimit({ windowMs: 15 * 60 * 1000, max: 10, message: { error: "Too many attempts, try later" } }),
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: { error: "Too many attempts, try later" },
+  }),
 );
 
 app.post("/api/admin/login", (req, res) => {
-  if (!safeEqual(req.body?.password ?? "", ADMIN_PASSWORD)) {
-    return res.status(401).json({ error: "Wrong password" });
+  const okUser = safeEqual(req.body?.username ?? "", process.env.ADMIN_USERNAME ?? "admin");
+  const okPass = safeEqual(req.body?.password ?? "", ADMIN_PASSWORD);
+  if (!okUser || !okPass) {
+    return res.status(401).json({ error: "Wrong username or password" });
   }
   const token = jwt.sign({ role: "admin" }, JWT_SECRET, { expiresIn: "7d" });
   res.json({ token });
 });
-
 /* ---------- health (UptimeRobot / Render ke liye) ---------- */
 app.get("/health", (_req, res) => res.json({ ok: true }));
 
@@ -157,7 +165,11 @@ app.put("/api/items/:id", requireAdmin, validId, async (req, res) => {
   const keys = Object.keys(req.body);
   if (keys.length === 1 && keys[0] === "available") {
     return res.json(
-      await Item.findByIdAndUpdate(req.params.id, { available: !!req.body.available }, { new: true }),
+      await Item.findByIdAndUpdate(
+        req.params.id,
+        { available: !!req.body.available },
+        { new: true },
+      ),
     );
   }
   const { data, error } = cleanItem(req.body);
@@ -182,7 +194,11 @@ app.put("/api/deals/:id", requireAdmin, validId, async (req, res) => {
   const keys = Object.keys(req.body);
   if (keys.length === 1 && keys[0] === "available") {
     return res.json(
-      await Deal.findByIdAndUpdate(req.params.id, { available: !!req.body.available }, { new: true }),
+      await Deal.findByIdAndUpdate(
+        req.params.id,
+        { available: !!req.body.available },
+        { new: true },
+      ),
     );
   }
   const { data, error } = cleanDeal(req.body);

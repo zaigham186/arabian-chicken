@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { CONTACT } from "@/data/menu";
 import { useCart } from "./cart";
 import { SearchBox } from "./SearchBox";
 
@@ -24,8 +23,9 @@ function CartIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M6 7h12l-1 13H7L6 7Z" />
-      <path d="M9 7a3 3 0 0 1 6 0" />
+      <circle cx="9" cy="20" r="1.5" />
+      <circle cx="18" cy="20" r="1.5" />
+      <path d="M2 3h3l2.7 11.4a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 7H6" />
     </svg>
   );
 }
@@ -34,7 +34,7 @@ function LockIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-3.5 w-3.5"
+      className="h-4 w-4"
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -54,28 +54,25 @@ export function Navbar() {
   const { count, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY + 150;
-      let currentSection = "home";
+    const onScroll = () => {
+      const pos = window.scrollY + 150;
+      let current = "home";
       NAV_LINKS.forEach((link) => {
-        const section = document.querySelector(link.href);
-        if (section) {
-          const sectionTop = (section as HTMLElement).offsetTop;
-          if (scrollPosition >= sectionTop) currentSection = link.href.slice(1);
-        }
+        const el = document.querySelector(link.href) as HTMLElement | null;
+        if (el && pos >= el.offsetTop) current = link.href.slice(1);
       });
-      setActiveSection(currentSection);
+      setActiveSection(current);
     };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
@@ -92,65 +89,57 @@ export function Navbar() {
         </div>
 
         {/* Desktop */}
-        <nav className="hidden items-center gap-3 lg:flex">
-          {NAV_LINKS.map((link) => {
-            const isActive = activeSection === link.href.slice(1);
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                className={`relative px-1 text-sm font-semibold transition-colors duration-200 ${
-                  isActive ? "text-accent" : "text-foreground/85 hover:text-accent"
-                }`}
-              >
-                {link.label}
-                <span
-                  className={`absolute -bottom-2 left-0 h-0.5 bg-accent transition-all duration-300 ${
-                    isActive ? "w-full" : "w-0"
+        <nav className="hidden items-center gap-7 lg:flex">
+          <div className="flex items-center gap-6">
+            {NAV_LINKS.map((link) => {
+              const isActive = activeSection === link.href.slice(1);
+              return (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className={`relative text-[13px] font-medium tracking-wide transition-colors ${
+                    isActive ? "text-accent" : "text-foreground/80 hover:text-accent"
                   }`}
-                />
-              </a>
-            );
-          })}
+                >
+                  {link.label}
+                  <span
+                    className={`absolute -bottom-2 left-0 h-0.5 bg-accent transition-all duration-300 ${
+                      isActive ? "w-full" : "w-0"
+                    }`}
+                  />
+                </a>
+              );
+            })}
+          </div>
 
-          {/* Order Now */}
-          <a
-            href={CONTACT.whatsappLink}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-11 shrink-0 items-center rounded-full bg-primary px-5 text-sm font-bold text-primary-foreground shadow-[0_6px_20px_-6px_var(--brand-red)] transition-transform hover:scale-105"
-          >
-            Order Now
-          </a>
+          <SearchBox className="w-36 xl:w-48" />
 
-          {/* Search */}
-          <SearchBox className="w-36 xl:w-44" />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              suppressHydrationWarning
+              onClick={() => setCartOpen(true)}
+              aria-label={`Add to Cart, ${count} items`}
+              className="relative inline-flex h-10 cursor-pointer items-center gap-2 rounded-full border border-accent/60 px-4 text-[13px] font-bold text-accent transition-all hover:scale-105 hover:bg-accent hover:text-accent-foreground"
+            >
+              <CartIcon />
+              <span>Add to Cart</span>
+              {count > 0 && (
+                <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-black text-primary-foreground">
+                  {count}
+                </span>
+              )}
+            </button>
 
-          {/* Add to Cart */}
-          <button
-            type="button"
-            suppressHydrationWarning
-            onClick={() => setCartOpen(true)}
-            aria-label={`Add to Cart, ${count} items`}
-            className="relative inline-flex h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-accent/60 px-4 text-sm font-bold text-accent transition-all hover:scale-105 hover:bg-accent hover:text-accent-foreground"
-          >
-            <CartIcon />
-            <span>Add to Cart</span>
-            {count > 0 && (
-              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-black text-primary-foreground">
-                {count}
-              </span>
-            )}
-          </button>
-
-          {/* Admin: sabse end mein, hamesha dikhta hai */}
-          <Link
-            href="/admin"
-            className="inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-accent/50 px-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent transition-colors hover:bg-accent hover:text-accent-foreground"
-          >
-            <LockIcon />
-            Admin
-          </Link>
+            <Link
+              href="/admin"
+              aria-label="Admin"
+              className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border px-4 text-[13px] font-semibold text-foreground/80 transition-colors hover:border-accent hover:text-accent"
+            >
+              <LockIcon />
+              <span>Admin</span>
+            </Link>
+          </div>
         </nav>
 
         {/* Mobile hamburger */}
@@ -164,19 +153,13 @@ export function Navbar() {
         >
           <span className="relative block h-4 w-5">
             <span
-              className={`absolute left-0 h-0.5 w-5 bg-foreground transition-all ${
-                open ? "top-1.5 rotate-45" : "top-0"
-              }`}
+              className={`absolute left-0 h-0.5 w-5 bg-foreground transition-all ${open ? "top-1.5 rotate-45" : "top-0"}`}
             />
             <span
-              className={`absolute left-0 top-1.5 h-0.5 w-5 bg-foreground transition-opacity ${
-                open ? "opacity-0" : "opacity-100"
-              }`}
+              className={`absolute left-0 top-1.5 h-0.5 w-5 bg-foreground transition-opacity ${open ? "opacity-0" : "opacity-100"}`}
             />
             <span
-              className={`absolute left-0 h-0.5 w-5 bg-foreground transition-all ${
-                open ? "top-1.5 -rotate-45" : "top-3"
-              }`}
+              className={`absolute left-0 h-0.5 w-5 bg-foreground transition-all ${open ? "top-1.5 -rotate-45" : "top-3"}`}
             />
           </span>
         </button>
@@ -195,7 +178,7 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`block border-b border-border/50 py-3.5 font-semibold transition-colors ${
+                  className={`block border-b border-border/50 py-3.5 font-medium ${
                     isActive ? "text-accent" : "text-foreground/90 hover:text-accent"
                   }`}
                 >
@@ -205,15 +188,6 @@ export function Navbar() {
             })}
           </div>
 
-          <a
-            href={CONTACT.whatsappLink}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-5 flex h-12 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground"
-          >
-            Order Now
-          </a>
-
           <button
             type="button"
             suppressHydrationWarning
@@ -221,7 +195,7 @@ export function Navbar() {
               setOpen(false);
               setCartOpen(true);
             }}
-            className="mt-3 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full border border-accent/60 font-bold text-accent"
+            className="mt-5 flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-primary font-bold text-primary-foreground"
           >
             <CartIcon />
             Add to Cart {count > 0 && `(${count})`}
@@ -229,7 +203,7 @@ export function Navbar() {
 
           <Link
             href="/admin"
-            className="mt-3 flex h-10 items-center justify-center gap-2 rounded-sm border border-accent/50 text-[11px] font-semibold uppercase tracking-[0.2em] text-accent"
+            className="mt-3 flex h-10 items-center justify-center gap-2 rounded-full border border-border text-xs font-semibold uppercase tracking-[0.2em] text-foreground/70"
           >
             <LockIcon />
             Admin

@@ -12,15 +12,15 @@ This project is completely production-ready. You can deploy it using any of the 
 
 Before deploying, make sure you configure these environment variables in your hosting provider's dashboard (see `.env.example`):
 
-| Variable | Description | Example / Required |
-| :--- | :--- | :--- |
-| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/dbname` |
-| `ADMIN_PASSWORD` | Strong password to access `/admin` | `YourSecretAdminPassword123!` |
-| `JWT_SECRET` | 32+ character random secret for JWT signing | `openssl rand -base64 32` |
-| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud identifier | `your_cloud_name` |
-| `CLOUDINARY_API_KEY` | Cloudinary API Key | `123456789012345` |
-| `CLOUDINARY_API_SECRET` | Cloudinary API Secret | `your_api_secret` |
-| `NEXT_PUBLIC_APP_URL` | Production website URL (for SEO / OpenGraph) | `https://arabianchicken.com` |
+| Variable                | Description                                  | Example / Required                                   |
+| :---------------------- | :------------------------------------------- | :--------------------------------------------------- |
+| `MONGODB_URI`           | MongoDB Atlas connection string              | `mongodb+srv://user:pass@cluster.mongodb.net/dbname` |
+| `ADMIN_PASSWORD`        | Strong password to access `/admin`           | `YourSecretAdminPassword123!`                        |
+| `JWT_SECRET`            | 32+ character random secret for JWT signing  | `openssl rand -base64 32`                            |
+| `CLOUDINARY_CLOUD_NAME` | Cloudinary cloud identifier                  | `your_cloud_name`                                    |
+| `CLOUDINARY_API_KEY`    | Cloudinary API Key                           | `123456789012345`                                    |
+| `CLOUDINARY_API_SECRET` | Cloudinary API Secret                        | `your_api_secret`                                    |
+| `NEXT_PUBLIC_APP_URL`   | Production website URL (for SEO / OpenGraph) | `https://arabianchicken.com`                         |
 
 > **MongoDB Atlas Note**: In your MongoDB Atlas dashboard under **Network Access**, ensure your hosting platform's IP address (or `0.0.0.0/0` for serverless hosts like Vercel) is added to the IP Access List.
 
@@ -63,6 +63,7 @@ The repository includes a production multi-stage `Dockerfile` and `.dockerignore
 ### Option 3: Deploy to a Linux VPS (Ubuntu / PM2 / NGINX)
 
 1. **Clone and Install**:
+
    ```bash
    git clone <repo-url>
    cd arabian-chicken
@@ -70,12 +71,14 @@ The repository includes a production multi-stage `Dockerfile` and `.dockerignore
    ```
 
 2. **Set Environment**:
+
    ```bash
    cp .env.example .env.local
    nano .env.local   # fill in production secrets
    ```
 
 3. **Build & Run with PM2**:
+
    ```bash
    npm run build
    pm2 start "npm run start" --name "arabian-chicken"

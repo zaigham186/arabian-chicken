@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
 
-const priceSchema = new mongoose.Schema(
-  { label: String, value: Number },
-  { _id: false },
-);
+const priceSchema = new mongoose.Schema({ label: String, value: Number }, { _id: false });
 
 const itemSchema = new mongoose.Schema(
   {

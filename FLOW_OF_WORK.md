@@ -645,8 +645,6 @@ The website has been migrated to a full-stack **Next.js App Router** architectur
      - Cloudinary upload & CDN image delivery
      - Complete logout / session revocation & client bundle secret-free audit
 
-
-
 ---
 
 _Created for **Arabian Chick, N** — Peshawar, Pakistan._

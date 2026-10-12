@@ -74,7 +74,11 @@ async function run() {
       method: "POST",
       body: new FormData(),
     });
-    assert("Upload without auth rejected (401)", rNoAuth.status === 401, `status: ${rNoAuth.status}`);
+    assert(
+      "Upload without auth rejected (401)",
+      rNoAuth.status === 401,
+      `status: ${rNoAuth.status}`,
+    );
 
     // Expired token
     const expToken = jwt.sign({ role: "admin" }, JWT_SECRET, { expiresIn: "-1s" });
@@ -83,7 +87,11 @@ async function run() {
       headers: { Authorization: `Bearer ${expToken}` },
       body: new FormData(),
     });
-    assert("Upload with expired token rejected (401)", rExp.status === 401, `status: ${rExp.status}`);
+    assert(
+      "Upload with expired token rejected (401)",
+      rExp.status === 401,
+      `status: ${rExp.status}`,
+    );
 
     // Non-admin token
     const userToken = jwt.sign({ role: "user" }, JWT_SECRET, { expiresIn: "1h" });
@@ -92,7 +100,11 @@ async function run() {
       headers: { Authorization: `Bearer ${userToken}` },
       body: new FormData(),
     });
-    assert("Upload with non-admin token rejected (401)", rUser.status === 401, `status: ${rUser.status}`);
+    assert(
+      "Upload with non-admin token rejected (401)",
+      rUser.status === 401,
+      `status: ${rUser.status}`,
+    );
   } catch (e) {
     assert("Upload authentication guards", false, e.message);
   }
@@ -106,7 +118,11 @@ async function run() {
       headers: { Authorization: `Bearer ${token}` },
       body: emptyForm,
     });
-    assert("Upload missing file rejected (400)", rNoFile.status === 400, `status: ${rNoFile.status}`);
+    assert(
+      "Upload missing file rejected (400)",
+      rNoFile.status === 400,
+      `status: ${rNoFile.status}`,
+    );
 
     // Unsupported MIME format (text/plain)
     const textForm = new FormData();
@@ -116,11 +132,19 @@ async function run() {
       headers: { Authorization: `Bearer ${token}` },
       body: textForm,
     });
-    assert("Upload invalid MIME rejected (400)", rBadMime.status === 400, `status: ${rBadMime.status}`);
+    assert(
+      "Upload invalid MIME rejected (400)",
+      rBadMime.status === 400,
+      `status: ${rBadMime.status}`,
+    );
 
     // Spoofed content (MIME says image/png but content is plain text)
     const fakeImgForm = new FormData();
-    fakeImgForm.append("image", new Blob(["malicious-script-content"], { type: "image/png" }), "fake.png");
+    fakeImgForm.append(
+      "image",
+      new Blob(["malicious-script-content"], { type: "image/png" }),
+      "fake.png",
+    );
     const rFakeImg = await fetch(`${BASE}/api/upload`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
@@ -130,7 +154,7 @@ async function run() {
     assert(
       "Upload spoofed magic-bytes rejected (400)",
       rFakeImg.status === 400 && dFakeImg.error === "Invalid image file content",
-      `error: ${dFakeImg.error}`
+      `error: ${dFakeImg.error}`,
     );
 
     // Oversized file (> 5 MB)
@@ -156,7 +180,7 @@ async function run() {
     assert(
       "Upload oversized file >5MB rejected (400)",
       rOversized.status === 400 && dOversized.error === "File size exceeds 5MB limit",
-      `error: ${dOversized.error}`
+      `error: ${dOversized.error}`,
     );
   } catch (e) {
     assert("Upload payload validation", false, e.message);
@@ -164,11 +188,18 @@ async function run() {
 
   // 3. Magic Bytes Unit Verification
   try {
-    const validPng = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
+    const validPng = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "base64",
+    );
     assert("isValidImageBuffer recognizes valid PNG", isValidImageBuffer(validPng), "PNG detected");
 
     const fakePng = Buffer.from("this is just text that pretends to be a png file");
-    assert("isValidImageBuffer rejects fake PNG", !isValidImageBuffer(fakePng), "Spoofed content blocked");
+    assert(
+      "isValidImageBuffer rejects fake PNG",
+      !isValidImageBuffer(fakePng),
+      "Spoofed content blocked",
+    );
   } catch (e) {
     assert("Magic bytes unit test", false, e.message);
   }
@@ -176,7 +207,10 @@ async function run() {
   // 4. Valid Image Upload to Cloudinary
   let uploadedUrl = null;
   try {
-    const validPng = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64");
+    const validPng = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "base64",
+    );
     const validForm = new FormData();
     validForm.append("image", new Blob([validPng], { type: "image/png" }), "pixel.png");
 
@@ -190,13 +224,15 @@ async function run() {
 
     assert(
       "Valid upload returns Cloudinary HTTPS URL",
-      rUpload.status === 200 && typeof uploadedUrl === "string" && uploadedUrl.startsWith("https://res.cloudinary.com/"),
-      `url: ${uploadedUrl}`
+      rUpload.status === 200 &&
+        typeof uploadedUrl === "string" &&
+        uploadedUrl.startsWith("https://res.cloudinary.com/"),
+      `url: ${uploadedUrl}`,
     );
     assert(
       "Upload targets folder 'arabian-chick'",
       uploadedUrl && uploadedUrl.includes("/arabian-chick/"),
-      "folder verified"
+      "folder verified",
     );
 
     // Verify Cloudinary CDN serves the image
@@ -229,7 +265,7 @@ async function run() {
     assert(
       "Item created with Cloudinary imageUrl",
       rCreateItem.status === 200 && dCreateItem.imageUrl === uploadedUrl,
-      `imageUrl saved`
+      `imageUrl saved`,
     );
 
     // Verify public GET /api/items returns the imageUrl
@@ -239,7 +275,7 @@ async function run() {
     assert(
       "Public API returns saved item imageUrl",
       foundItem && foundItem.imageUrl === uploadedUrl,
-      "verified in public catalogue"
+      "verified in public catalogue",
     );
 
     // Update item WITHOUT changing image -> verify existing imageUrl is preserved
@@ -260,7 +296,7 @@ async function run() {
     assert(
       "Item update preserves existing imageUrl",
       rUpdateItem.status === 200 && dUpdateItem.imageUrl === uploadedUrl,
-      "imageUrl preserved across update"
+      "imageUrl preserved across update",
     );
 
     // Cleanup delete
@@ -297,7 +333,7 @@ async function run() {
     assert(
       "Deal created with Cloudinary imageUrl",
       rCreateDeal.status === 200 && dCreateDeal.imageUrl === uploadedUrl,
-      `deal imageUrl saved`
+      `deal imageUrl saved`,
     );
 
     // Verify public GET /api/deals returns the imageUrl
@@ -307,7 +343,7 @@ async function run() {
     assert(
       "Public API returns saved deal imageUrl",
       foundDeal && foundDeal.imageUrl === uploadedUrl,
-      "verified in public deals"
+      "verified in public deals",
     );
 
     // Update deal -> verify imageUrl preserved
@@ -329,7 +365,7 @@ async function run() {
     assert(
       "Deal update preserves existing imageUrl",
       rUpdateDeal.status === 200 && dUpdateDeal.imageUrl === uploadedUrl,
-      "deal imageUrl preserved"
+      "deal imageUrl preserved",
     );
 
     // Cleanup delete
@@ -348,12 +384,12 @@ async function run() {
     assert(
       "next.config.mjs allows res.cloudinary.com remotePattern",
       nextConfigContent.includes("res.cloudinary.com"),
-      "Cloudinary host configured"
+      "Cloudinary host configured",
     );
     assert(
       "Image optimization is not globally disabled",
       !nextConfigContent.includes("unoptimized: true"),
-      "global unoptimized flag removed"
+      "global unoptimized flag removed",
     );
   } catch (e) {
     assert("Next.js image configuration check", false, e.message);
@@ -365,14 +401,14 @@ async function run() {
     assert(
       "Local FOOD_IMAGES mapping contains menu assets",
       imagesSrc.includes("FOOD_IMAGES") && imagesSrc.includes("MENU_IMAGES"),
-      "local image map present"
+      "local image map present",
     );
 
     const smartImageSrc = fs.readFileSync("src/components/SmartImage.tsx", "utf8");
     assert(
       "SmartImage handles responsive display and lazy loading",
       smartImageSrc.includes('loading="lazy"'),
-      "lazy loading enabled"
+      "lazy loading enabled",
     );
   } catch (e) {
     assert("Fallback image audit", false, e.message);
