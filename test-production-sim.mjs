@@ -75,6 +75,7 @@ async function runProductionSimulation() {
     assert("Production Homepage HTTP 200", rHome.status === 200, `status: ${rHome.status}`);
     assert("Security header X-Content-Type-Options", rHome.headers.get("x-content-type-options") === "nosniff", "nosniff present");
     assert("Security header X-Frame-Options", rHome.headers.get("x-frame-options") === "SAMEORIGIN", "SAMEORIGIN present");
+    assert("Security header HSTS", !!rHome.headers.get("strict-transport-security"), "HSTS present");
     assert("Production Homepage HTML content", tHome.includes("Arabian Chick"), "brand text verified");
     assert("Production Homepage Next scripts", tHome.includes("/_next/static"), "optimized assets verified");
 
@@ -100,6 +101,19 @@ async function runProductionSimulation() {
     const rDeals = await fetch(`${BASE}/api/deals`);
     const dDeals = await rDeals.json();
     assert("Production GET /api/deals", rDeals.status === 200 && Array.isArray(dDeals) && dDeals.length > 0, `${dDeals.length} deals`);
+
+    // 3b. Production SEO, Robots, Sitemap & Manifest Verification
+    const rRobots = await fetch(`${BASE}/robots.txt`);
+    const tRobots = await rRobots.text();
+    assert("Production /robots.txt HTTP 200", rRobots.status === 200 && tRobots.includes("Disallow: /admin"), "robots.txt disallows /admin");
+
+    const rSitemap = await fetch(`${BASE}/sitemap.xml`);
+    const tSitemap = await rSitemap.text();
+    assert("Production /sitemap.xml HTTP 200", rSitemap.status === 200 && tSitemap.includes("<urlset"), "sitemap.xml verified");
+
+    const rManifest = await fetch(`${BASE}/manifest.webmanifest`);
+    const dManifest = await rManifest.json().catch(() => ({}));
+    assert("Production PWA Manifest", rManifest.status === 200 && dManifest.short_name === "Arabian Chick", "PWA manifest active");
 
     // 4. Admin Authentication in Production Runtime
     const rWrongLogin = await fetch(`${BASE}/api/admin/login`, {

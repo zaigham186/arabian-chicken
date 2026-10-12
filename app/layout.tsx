@@ -21,21 +21,54 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const siteUrl = process.env["NEXT_PUBLIC_APP_URL"] || "https://arabianchicken.com";
+
 export const metadata: Metadata = {
-  title: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar",
+    template: "%s | Arabian Chick, N",
+  },
   description:
     "Arabian Chick, N is Peshawar's go-to spot for crispy wings, sizzling BBQ and handcrafted pizzas. Student deals, home delivery — order on WhatsApp.",
+  keywords: [
+    "Arabian Chicken",
+    "Arabian Chick N",
+    "Pizza Peshawar",
+    "Fast Food Peshawar",
+    "Crispy Wings",
+    "BBQ Peshawar",
+    "Burgers Peshawar",
+    "WhatsApp Food Order Peshawar",
+  ],
+  authors: [{ name: "Arabian Chick, N" }],
+  creator: "Arabian Chick, N",
+  publisher: "Arabian Chick, N",
+  alternates: {
+    canonical: "/",
+  },
   icons: {
-    icon: "/favicon.ico",
+    icon: "/icon",
+    apple: "/icon",
   },
   openGraph: {
     title: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar",
     description:
       "Crispy wings, sizzling BBQ and handcrafted pizzas in Peshawar. Explore the menu, student deals and home delivery.",
+    url: siteUrl,
+    siteName: "Arabian Chick, N",
+    locale: "en_PK",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
+    title: "Arabian Chick, N — Fast Food & Pizza Restaurant, Peshawar",
+    description:
+      "Crispy wings, sizzling BBQ and handcrafted pizzas in Peshawar. Explore the menu, student deals and home delivery.",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 

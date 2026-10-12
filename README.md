@@ -113,8 +113,9 @@ npm run test:prod
 
 ## 🛡 Features & Architecture
 
-- **Next.js App Router**: Server-side rendering, streaming metadata, dynamic sitemap (`/sitemap.xml`), and custom 404/Error boundaries.
-- **Security**: HttpOnly SameSite session cookies, binary magic-byte validation on file uploads, HTTP security headers (`nosniff`, `SAMEORIGIN`, `strict-origin-when-cross-origin`).
+- **Next.js App Router**: Server-side rendering, streaming metadata, dynamic sitemap (`/sitemap.xml`), robots exclusion (`/robots.txt`), PWA manifest (`/manifest.webmanifest`), and custom 404/Error boundaries (`error.tsx`, `global-error.tsx`).
+- **Security**: HttpOnly SameSite session cookies, binary magic-byte validation on file uploads, strict rate-limiting on admin login, HSTS (`Strict-Transport-Security`), DNS prefetch controls, X-Frame-Options, and disabled technology fingerprints (`poweredByHeader: false`).
 - **Cloudinary Direct Stream**: Resilient image upload and optimization for menu items and deals.
 - **WhatsApp Checkout**: Interactive cart drawer generating formatted WhatsApp orders directly to restaurant staff.
-- **Admin Dashboard (`/admin`)**: Complete real-time menu management, category grouping, pricing, stock toggling, and image uploads.
+- **Admin Dashboard (`/admin`)**: Complete real-time menu management, category grouping, pricing, stock toggling, and image uploads protected with `noindex, nofollow` crawler isolation.
+- **Zero-Warning Code Quality**: Full TypeScript strict compliance (`npm run typecheck`) and ESLint validation (`npm run lint`).

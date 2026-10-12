@@ -1,0 +1,15 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Portal | Arabian Chick, N",
+  description: "Administrative dashboard for Arabian Chick, N menu & stock management.",
+  robots: {
+    index: false,
+    follow: false,
+    nocache: true,
+  },
+};
+
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
