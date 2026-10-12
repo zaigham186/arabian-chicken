@@ -41,8 +41,10 @@ const btn = "rounded-lg px-4 py-2 text-sm font-bold transition-colors";
 export default function AdminPage() {
   const [token, setToken] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     async function verifySession() {
       const stored = typeof window !== "undefined" ? localStorage.getItem("admin_token") : null;
       try {
@@ -86,10 +88,15 @@ export default function AdminPage() {
     setToken(null);
   };
 
-  if (!ready) {
+  if (!mounted || !ready) {
     return (
-      <div className="grid min-h-screen place-items-center bg-background px-4">
-        <p className="text-sm font-semibold text-muted-foreground">Checking authorization...</p>
+      <div
+        suppressHydrationWarning
+        className="grid min-h-screen place-items-center bg-background px-4"
+      >
+        <p suppressHydrationWarning className="text-sm font-semibold text-muted-foreground">
+          Checking authorization...
+        </p>
       </div>
     );
   }
@@ -140,11 +147,15 @@ function Login({ onLogin }: { onLogin: (t: string) => void }) {
   };
 
   return (
-    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4">
+    <div
+      suppressHydrationWarning
+      className="relative grid min-h-screen place-items-center overflow-hidden bg-background px-4"
+    >
       <div className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-brand-red/20 blur-[120px]" />
       <div className="pointer-events-none absolute -right-32 bottom-0 h-96 w-96 rounded-full bg-brand-gold/15 blur-[120px]" />
 
       <form
+        suppressHydrationWarning
         onSubmit={(e) => {
           e.preventDefault();
           submit();
@@ -314,7 +325,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const dealRows = deals.filter((d) => `${d.title} ${d.badge ?? ""}`.toLowerCase().includes(q));
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div suppressHydrationWarning className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border bg-charcoal-deep">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
           <h1 className="font-display text-lg font-black">Arabian Chick, N · Admin</h1>
